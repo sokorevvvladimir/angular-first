@@ -1,0 +1,19 @@
+<form
+  class="contacts-form"
+  (submit)="addContact(nameInput.value, numberInput.value)"
+>
+  <label for="name-input">Name</label>
+
+  <input id="name-input" #nameInput [(ngModel)]="contact.name" name="name" />
+
+  <label for="number-input">Number</label>
+
+  <input
+    id="number-input"
+    #numberInput
+    [(ngModel)]="contact.number"
+    name="number"
+  />
+
+  <button type="submit" class="form-button">Add contact</button>
+</form>

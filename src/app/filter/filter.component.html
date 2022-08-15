@@ -1,0 +1,8 @@
+<label for="filter" class="filter-label">Find contact by name</label>
+<input
+  id="filter"
+  (input)="onInputChange(filter.value)"
+  [(ngModel)]="filterValue"
+  name="filterValue"
+  #filter
+/>

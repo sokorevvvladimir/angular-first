@@ -1,0 +1,13 @@
+<div class="container">
+  <h1>Phonebook</h1>
+  <app-contacts-form
+    (newContacts)="onPassContacts($event)"
+    [contacts]="appContacts"
+  ></app-contacts-form>
+  <h2>Contacts</h2>
+  <app-filter (filter)="onFilterPass($event)"></app-filter>
+  <app-list
+    [contactsList]="appContacts"
+    (updatedContactsList)="onPassContacts($event)"
+  ></app-list>
+</div>
