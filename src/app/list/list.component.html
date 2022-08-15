@@ -1,8 +1,8 @@
-<div *ngIf="contactsList.length === 0" class="notification">
+<div *ngIf="filteredContacts.length === 0" class="notification">
   Nothing here so far
 </div>
 <ul class="list">
-  <li *ngFor="let item of contactsList" class="item">
+  <li *ngFor="let item of filteredContacts" class="item">
     {{ item.name }}: {{ item.number
     }}<button (click)="onDelete(item.id)" class="item-button">Delete</button>
   </li>

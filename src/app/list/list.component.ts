@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Contact } from '../contact';
 
 @Component({
@@ -6,8 +6,10 @@ import { Contact } from '../contact';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
-export class ListComponent implements OnChanges {
-
+export class ListComponent {
+  @Input()
+  filteredContacts: Contact[] = [];
+  
   @Input()
   contactsList: Contact[] = [];
 
@@ -18,14 +20,10 @@ export class ListComponent implements OnChanges {
 
   onDelete(id: string): void {
   
-    this.contactsList= this.contactsList.filter(item => item.id !== id);
-    this.updatedContactsList.emit(this.contactsList);
+    this.filteredContacts = this.contactsList.filter(item => item.id !== id);
+    this.updatedContactsList.emit(this.filteredContacts);
   
 }
-  ngOnChanges(): void {
-
-  }
-
-  
+ 
 
 }

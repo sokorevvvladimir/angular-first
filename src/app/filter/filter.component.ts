@@ -1,11 +1,11 @@
-import { Component, OnChanges, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, Output, EventEmitter, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.css']
 })
-export class FilterComponent implements OnChanges {
+export class FilterComponent {
   @Output()
   filter = new EventEmitter<string>();
 
@@ -16,8 +16,8 @@ export class FilterComponent implements OnChanges {
     this.filter.emit(value);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('onchanges called')
+  clearFilter(): void {
+    this.filterValue = '';
   }
 
 }

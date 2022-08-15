@@ -14,10 +14,11 @@ export class AppComponent {
   
   onPassContacts(contacts: Contact[]): void {
     this.appContacts = contacts;
+    this.filteredContacts = contacts;
   }
 
-  onFilterPass(value: string) {
+  onFilterPass(value: string): void {
     this.filteredContacts = this.appContacts.filter(item => item.name.toLowerCase().includes(value.toLowerCase()));
-    console.log(this.filteredContacts);
+  
   }
 }
