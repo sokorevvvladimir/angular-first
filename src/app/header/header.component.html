@@ -1,0 +1,37 @@
+<mat-toolbar color="primary">
+  <div class="container">
+    <div fxHide.gt-xs>
+      <button mat-icon-button (click)="onToggleSidenav()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+    <div>
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Home</a
+      >
+    </div>
+    <div fxFlex="row" fxLayout="row" fxLayoutAlign="end" fxHide.xs>
+      <ul fxLayout fxLayoutGap="15px" class="navigation-items">
+        <li>
+          <a routerLink="/contacts" routerLinkActive="active"
+            ><span
+              matBadge="{{ totalContacts }}"
+              matBadgeOverlap="false"
+              matBadgeColor="accent"
+              matBadgeSize="small"
+              matBadgePosition="before"
+              >Contacts</span
+            ></a
+          >
+        </li>
+        <li>
+          <a routerLink="/location" routerLinkActive="active">Location</a>
+        </li>
+        <li><a routerLink="/player" routerLinkActive="active">Player</a></li>
+      </ul>
+    </div>
+  </div>
+</mat-toolbar>

@@ -1,9 +1,13 @@
-<label for="filter" class="filter-label">Find contact by name</label>
-<input
-  id="filter"
-  (input)="onInputChange(filter.value)"
-  [(ngModel)]="filterValue"
-  name="filterValue"
-  #filter
-  (blur)="clearFilter()"
-/>
+<mat-form-field appearance="outline">
+  <mat-label>Find contact by name</mat-label>
+  <input
+    matInput
+    placeholder="Type contact name..."
+    (input)="onInputChange(filter.value)"
+    [(ngModel)]="filterValue"
+    name="filterValue"
+    #filter
+    (blur)="clearFilter()"
+  />
+  <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>

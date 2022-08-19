@@ -1,7 +1,8 @@
 <form
-  [formGroup]="contactsForm"
+  class="editForm"
+  [formGroup]="editContactForm"
   fxLayout="column"
-  (submit)="addContact(formDirective)"
+  (submit)="updateContact(formDirective)"
   #formDirective="ngForm"
 >
   <span class="error" *ngIf="isControlInvalid('name')"
@@ -9,7 +10,7 @@
     3 characters</span
   >
   <mat-form-field appearance="fill">
-    <mat-label>Enter a name</mat-label>
+    <mat-label color="secondary">Enter a name</mat-label>
     <input matInput placeholder="Name" formControlName="name" required />
   </mat-form-field>
   <span class="error" *ngIf="isControlInvalid('email')"
@@ -36,8 +37,8 @@
     mat-raised-button
     color="primary"
     type="submit"
-    [disabled]="contactsForm.invalid"
+    [disabled]="editContactForm.invalid"
   >
-    Add contact
+    Update
   </button>
 </form>

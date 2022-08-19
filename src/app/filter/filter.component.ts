@@ -7,16 +7,16 @@ import { Component, Output, EventEmitter, SimpleChanges } from '@angular/core';
 })
 export class FilterComponent {
   @Output()
-  filter = new EventEmitter<string>();
+  public filter = new EventEmitter<string>();
 
-  filterValue = '';
+  public filterValue = '';
   constructor() { }
 
-  onInputChange(value: string): void {
+  public onInputChange(value: string): void {
     this.filter.emit(value);
   }
 
-  clearFilter(): void {
+  public clearFilter(): void {
     this.filterValue = '';
   }
 

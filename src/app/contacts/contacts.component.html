@@ -1,0 +1,55 @@
+<div class="container">
+  <h1 class="headers">Phonebook</h1>
+  <div class="contacts-form">
+    <app-contacts-form
+      (newContacts)="onPassContacts($event)"
+      [contacts]="appContacts"
+    ></app-contacts-form>
+  </div>
+  <h2 class="headers">Contacts</h2>
+  <app-filter (filter)="onFilterPass($event)"></app-filter>
+  <app-list>
+    <div *ngIf="filteredContacts.length === 0" class="notification">
+      Nothing here so far
+    </div>
+
+    <mat-list-item
+      role="listitem"
+      *ngFor="let item of filteredContacts"
+      [ngClass]="item.id === id ? 'item-edit' : 'item'"
+      ><mat-card-item style="width: 100%">
+        <div class="styledDiv">
+          <span class="span"
+            >{{ item.name }}: {{ item.phone }} {{ item.email }}</span
+          >
+          <button
+            class="list-button"
+            mat-raised-button
+            color="primary"
+            type="submit"
+            (click)="onEdit(item.id)"
+            [disabled]="item.id === id ? 'true' : 'false'"
+          >
+            Edit
+          </button>
+          <button
+            class="list-button"
+            mat-raised-button
+            color="secondary"
+            type="submit"
+            (click)="onDelete(item.id)"
+          >
+            Delete
+          </button>
+        </div>
+        <app-edit-component
+          *ngIf="showEdit && item.id === id"
+          [currentContact]="item"
+          (updateShowEdit)="onUpdatedShowEdit($event)"
+          (updatedContact)="onUpdateContact($event)"
+          [showEdit]="showEdit"
+        ></app-edit-component>
+      </mat-card-item>
+    </mat-list-item>
+  </app-list>
+</div>

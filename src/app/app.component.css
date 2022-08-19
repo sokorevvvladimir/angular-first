@@ -1,6 +1,8 @@
-.container {
-    width: 50vw;
-    margin: 0 auto;
-    padding: 1rem;
-    font-family: sans-serif;
+
+mat-sidenav-container, mat-sidenav, mat-sidenav-content {
+    height: 100%;    
+}
+
+mat-sidenav {
+    width: 250px;
 }

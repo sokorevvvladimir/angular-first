@@ -1,14 +1,12 @@
-<div class="container">
-  <h1>Phonebook</h1>
-  <app-contacts-form
-    (newContacts)="onPassContacts($event)"
-    [contacts]="appContacts"
-  ></app-contacts-form>
-  <h2>Contacts</h2>
-  <app-filter (filter)="onFilterPass($event)"></app-filter>
-  <app-list
-    [filteredContacts]="filteredContacts"
-    [contactsList]="appContacts"
-    (updatedContactsList)="onPassContacts($event)"
-  ></app-list>
-</div>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav role="navigation">
+    <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
+
+    <main style="padding: 70px 0">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
