@@ -16,8 +16,10 @@ export class ContactsComponent implements OnInit {
 
   constructor(private readonly localStorageService: LocalStorageService, private readonly totalContactsService: TotalContactsService) {}
   ngOnInit() {
-    this.appContacts = this.localStorageService.get('appContacts');
-    this.filteredContacts = this.localStorageService.get('appContacts');
+    
+    const initialValue = this.localStorageService.get('appContacts');
+    this.appContacts = initialValue === null ? [] : initialValue;
+    this.filteredContacts = initialValue === null ? [] : initialValue;
     this.totalContactsService.set(this.appContacts.length);
   }
   public appContacts: Contact[] = [];

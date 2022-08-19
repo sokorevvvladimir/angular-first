@@ -38,14 +38,10 @@ public editContactForm: FormGroup;
     const { name, email, phone } = this.editContactForm.value;
     const id = this.currentContact.id;
 
-    // this.contacts.push({id, name, email, phone} as Contact)
-
     this.updatedContact.emit({ id, name, email, phone });
     this.showEdit = false;
     this.updateShowEdit.emit(this.showEdit);
-   
-    // this.contactsForm.reset();
-    // formDirective.resetForm();
+
   };
 
   public isControlInvalid(controlName: string): boolean {
