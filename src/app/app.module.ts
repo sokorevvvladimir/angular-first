@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgToastModule } from 'ng-angular-popup';
 
 import { AppComponent } from './app.component';
 import { ContactsFormComponent } from './contacts-form/contacts-form.component';
@@ -50,7 +51,7 @@ const appRoutes: Routes = [
     NotfoundComponent,
     HeaderComponent,
     SidenavListComponent,
-    EditComponentComponent,
+    EditComponentComponent
   ],
   imports: [
     BrowserModule,
@@ -67,8 +68,8 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatBadgeModule
-    
+    MatBadgeModule,
+    NgToastModule
   ],
   providers: [],
   bootstrap: [AppComponent],

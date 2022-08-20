@@ -26,6 +26,8 @@ public editContactForm: FormGroup;
   this.initForm();
   };
 
+  
+
   private initForm(): void {
   this.editContactForm = this.fb.group({
    name: [this.currentContact.name, [Validators.required, Validators.minLength(3), Validators.pattern('[a-zA-Z ]*')]],
