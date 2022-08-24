@@ -17,6 +17,7 @@
       role="listitem"
       *ngFor="let item of filteredContacts"
       [ngClass]="item.id === id ? 'item-edit' : 'item'"
+      (click)="onItemClick(item)"
       ><mat-card-item style="width: 100%">
         <div class="styledDiv">
           <span class="span"
@@ -27,7 +28,7 @@
             mat-raised-button
             color="primary"
             type="submit"
-            (click)="onEdit(item.id)"
+            (click)="onEditOpenDialog()"
             [disabled]="item.id === id ? 'true' : 'false'"
           >
             Edit
@@ -42,13 +43,13 @@
             Delete
           </button>
         </div>
-        <app-edit-component
+        <!-- <app-edit-component
           *ngIf="showEdit && item.id === id"
           [currentContact]="item"
           (updateShowEdit)="onUpdatedShowEdit($event)"
           (updatedContact)="onUpdateContact($event)"
           [showEdit]="showEdit"
-        ></app-edit-component>
+        ></app-edit-component> -->
       </mat-card-item>
     </mat-list-item>
   </app-list>

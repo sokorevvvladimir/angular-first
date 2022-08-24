@@ -3,7 +3,10 @@ import { Contact } from '../contact';
 import { NgToastService } from 'ng-angular-popup'
 import { LocalStorageService } from '../local-storage.service';
 import { TotalContactsService } from '../total-contacts.service';
+import { CurrentContactService } from '../current-contact.service';
 import { ViewportScroller } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-contacts',
@@ -16,7 +19,7 @@ export class ContactsComponent implements OnInit {
   public showEdit = false;
   public id: string;
 
-  constructor(private readonly localStorageService: LocalStorageService, private readonly totalContactsService: TotalContactsService, private toast: NgToastService, private vps: ViewportScroller) {}
+  constructor(private readonly localStorageService: LocalStorageService, private readonly totalContactsService: TotalContactsService, private readonly currentContactService: CurrentContactService, private toast: NgToastService, private vps: ViewportScroller, public dialog: MatDialog) {}
   
   private toastOnAddSuccess(): void {
     this.toast.success({detail: 'Success!', summary: 'Contact added!', duration: 2000, position: 'br'})
@@ -42,6 +45,10 @@ this.toast.success({detail: 'Success!', summary: 'Contact updated!', duration: 2
   public appContacts: Contact[] = [];
   public filteredContacts: Contact[] = [];
   
+  public onItemClick = (item: Contact): void => {
+    
+    this.currentContactService.set(item);
+  }
 
  public onPassContacts(contacts: Contact[]): void {
     this.appContacts = contacts;
@@ -68,13 +75,16 @@ this.toast.success({detail: 'Success!', summary: 'Contact updated!', duration: 2
   private scrollFn(anchor: string): void{
   	this.vps.scrollToAnchor(anchor)
   }
-  
-  public onEdit(id: string): void {
-    this.id = id;
-    this.showEdit = true;
-  
-    this.scrollFn("update-btn");
+  public onEditOpenDialog = (): void => {
+    const dialogRef = this.dialog.open(EditDialogComponent, {});
+    dialogRef.afterClosed().subscribe(res => { console.log(res) })
   }
+  // public onEdit(id: string): void {
+  //   this.id = id;
+  //   this.showEdit = true;
+  
+  //   this.scrollFn("update-btn");
+  // }
 
   public onUpdateContact(contact: Contact): void {
     const idx = this.appContacts.findIndex((item) => item.id === contact.id)

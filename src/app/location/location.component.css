@@ -1,0 +1,38 @@
+.map-container {
+  margin: 0 20px;
+  text-align: center;
+}
+
+.map-frame {
+  border: 2px solid black;
+  height: 100%;
+}
+
+#map {
+  height: 100%;
+}
+
+.map-span {
+    color: #ffff00;
+    margin-left: 5px;
+}
+
+.map-btn {
+    margin-bottom: 10px;
+}
+
+.searchForm {
+    display: flex;
+    justify-content: center;
+   
+    margin-bottom: 10px;
+}
+
+::ng-deep .mat-form-field-wrapper{
+   padding-bottom: 0;
+   
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper {
+margin: 0;
+}

@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgToastModule } from 'ng-angular-popup';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { ContactsFormComponent } from './contacts-form/contacts-form.component';
@@ -29,6 +30,8 @@ import { MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
 import { EditComponentComponent } from './edit-component/edit-component.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -51,7 +54,9 @@ const appRoutes: Routes = [
     NotfoundComponent,
     HeaderComponent,
     SidenavListComponent,
-    EditComponentComponent
+    EditComponentComponent,
+    ConfirmDialogComponent,
+    EditDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -69,10 +74,13 @@ const appRoutes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatBadgeModule,
-    NgToastModule
+    NgToastModule,
+    MatDialogModule
   ],
-  providers: [],
+  providers: [{ provide: MAT_DIALOG_DATA, useValue: {} },
+     { provide: MatDialogRef, useValue: {} }],
   bootstrap: [AppComponent],
+  entryComponents: [ConfirmDialogComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

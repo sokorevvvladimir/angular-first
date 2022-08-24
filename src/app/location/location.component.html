@@ -1,1 +1,14 @@
-<p>location works!</p>
+<div class="map-container">
+  <div *ngIf="isConsentModalOpen">
+    <form [formGroup]="searchMapForm" class="searchForm" (submit)="find()">
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput formControlName="search" style="padding: 0" />
+      </mat-form-field>
+      <button mat-raised-button color="accent">Find!</button>
+    </form>
+  </div>
+  <div class="map-frame">
+    <div id="map"></div>
+  </div>
+</div>
