@@ -1,0 +1,32 @@
+.item {
+    color: #ffffff;
+    background-color: #4A82B0 ;
+    border-radius: 3px;   
+}
+
+.span {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.item:nth-child(2n) {
+    background-color: #909A99 ; 
+}
+
+.item:not(:last-child) {
+    margin-bottom: 5px;
+}
+
+.notification {
+    font-size: 16px;
+}
+
+.list-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.list-button:not(:last-child) {
+    margin-right: 5px;
+}

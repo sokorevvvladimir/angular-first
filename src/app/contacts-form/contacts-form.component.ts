@@ -1,9 +1,6 @@
-import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormGroupDirective, Validators } from '@angular/forms';
-import { v4 as uuidv4 } from 'uuid';
-import { NgToastService } from 'ng-angular-popup'
-
-import { Contact } from '../contact';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { StoreService } from '../store.service';
 
 @Component({
   selector: 'app-contacts-form',
@@ -14,14 +11,7 @@ export class ContactsFormComponent implements OnInit {
   
  public contactsForm: FormGroup;
 
-  @Output()
-  public newContacts = new EventEmitter<Contact[]>();
-  
-  @Input()
-  public contacts: Contact[] = [];
-
-
-  constructor(private readonly fb: FormBuilder, private toast: NgToastService) { }
+  constructor(private readonly fb: FormBuilder, private readonly storeService: StoreService) { }
   
 ngOnInit(): void {
   this.initForm();
@@ -34,37 +24,31 @@ ngOnInit(): void {
    phone: ['', [Validators.required, Validators.pattern('[0-9]*')]]
   });
   };
-  
-  public onSameName(name: string) { 
-    return this.contacts.find(contact => contact.name === name)
+
+  public getErrorMessage = (name: string) => {
+    switch (name) {
+      case "name":
+        return this.contactsForm.controls['name'].hasError('required') ? 'You must enter a value' :
+        this.contactsForm.controls['name'].hasError('pattern') ? 'A name must contain only letters, numbers and spaces' :
+        this.contactsForm.controls['name'].hasError('minlength') ? 'Required length is at least 3 characters' :
+           '';
+      case "email":
+        return this.contactsForm.controls['email'].hasError('required') ? 'You must enter a value' :
+          this.contactsForm.controls['email'].hasError('email') ? "An email must contain '@' sign" :
+            '';
+
+      case "phone":
+        return this.contactsForm.controls['phone'].hasError('required') ? 'You must enter a value' :
+          this.contactsForm.controls['phone'].hasError('pattern') ? 'A phone number must consist of only numbers' :
+            '';
+      default:
+        return;
+    }
   }
   
-  public addContact(formDirective: FormGroupDirective) {
-    const { name, email, phone } = this.contactsForm.value;
-  
-    if (this.onSameName(name)) {
-      // alert(`${name} is already in contacts.`);
-      this.toastError(name);
-      return;
-    };
-    this.contacts.push({id: uuidv4(), name, email, phone} as Contact)
-
-    this.newContacts.emit(this.contacts);
+  public addContact() {
+    this.storeService.setContact(this.contactsForm.value)
     this.contactsForm.reset();
-    formDirective.resetForm();
-  };
-
-   private toastError(name: string): void {
-    this.toast.error({detail: 'Error!', summary: `"${name}" is already in contacts.`, duration: 2000, position: 'br'})
   }
-
-public isControlInvalid(controlName: string): boolean {
-const control = this.contactsForm.controls[controlName];
-
- const result = control.invalid && control.touched;
-
- return result;
-}
-
 
 }

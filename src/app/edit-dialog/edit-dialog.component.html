@@ -1,41 +1,25 @@
 <mat-dialog-content>
-  <form
-    class="editForm"
-    [formGroup]="editContactForm"
-    fxLayout="column"
-    #formDirective="ngForm"
-  >
-    <span class="error" *ngIf="isControlInvalid('name')"
-      >A name must contain only letters, numbers and spaces and to be longer
-      than 3 characters</span
-    >
+  <form [formGroup]="editContactForm" fxLayout="column">
     <mat-form-field appearance="fill">
-      <mat-label color="secondary">Enter a name</mat-label>
-      <input matInput placeholder="Name" formControlName="name" required />
+      <mat-label>Enter a name</mat-label>
+      <input matInput placeholder="Name" formControlName="name" />
+      <mat-error *ngIf="editContactForm.controls['name'].invalid">{{
+        getErrorMessage("name")
+      }}</mat-error>
     </mat-form-field>
-    <span class="error" *ngIf="isControlInvalid('email')"
-      >An email must contain "@" sign</span
-    >
     <mat-form-field appearance="fill">
       <mat-label>Enter an email</mat-label>
-      <input
-        matInput
-        placeholder="mail@example.com"
-        formControlName="email"
-        required
-      />
+      <input matInput placeholder="mail@example.com" formControlName="email" />
+      <mat-error *ngIf="editContactForm.controls['email'].invalid">{{
+        getErrorMessage("email")
+      }}</mat-error>
     </mat-form-field>
-    <span class="error" *ngIf="isControlInvalid('phone')"
-      >A phone number must consist of only numbers</span
-    >
     <mat-form-field appearance="fill">
       <mat-label>Enter a phone number</mat-label>
-      <input
-        matInput
-        placeholder="123456789"
-        formControlName="phone"
-        required
-      />
+      <input matInput placeholder="123456789" formControlName="phone" />
+      <mat-error *ngIf="editContactForm.controls['phone'].invalid">{{
+        getErrorMessage("phone")
+      }}</mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>
@@ -46,7 +30,7 @@
     color="primary"
     type="submit"
     [disabled]="editContactForm.invalid"
-    (click)="updateContact(formDirective)"
+    (click)="updateContact()"
     [mat-dialog-close]="true"
   >
     Update

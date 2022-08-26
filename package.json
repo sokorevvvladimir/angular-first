@@ -22,7 +22,6 @@
     "@angular/router": "^14.1.0",
     "@googlemaps/js-api-loader": "^1.14.3",
     "@types/googlemaps": "^3.43.3",
-    "ng-angular-popup": "^0.1.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "uuid": "^8.3.2",

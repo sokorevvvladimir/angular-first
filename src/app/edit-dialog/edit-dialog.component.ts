@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, FormGroupDirective, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Contact } from '../contact';
-import { CurrentContactService } from '../current-contact.service';
+import { StoreService } from '../store.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -11,13 +11,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class EditDialogComponent implements OnInit {
   public editContactForm: FormGroup;
-  public currentContact: Contact;
-  constructor(public dialogRef: MatDialogRef<EditDialogComponent>, @Inject(MAT_DIALOG_DATA) public message: string, private readonly currentContactService: CurrentContactService, private readonly fb: FormBuilder) { }
+
+  constructor(public dialogRef: MatDialogRef<EditDialogComponent>, @Inject(MAT_DIALOG_DATA) public currentContact: Contact, private readonly storeService: StoreService, private readonly fb: FormBuilder) {  }
 
   ngOnInit(): void {
-    
-    this.currentContactService.currentContact$.subscribe(currentContact => { this.currentContact = currentContact; this.initForm();})
-  
+    this.initForm();
   }
 
   private initForm(): void {
@@ -29,22 +27,30 @@ export class EditDialogComponent implements OnInit {
     
   };
 
-  public updateContact(formDirective: FormGroupDirective) {
+   public getErrorMessage = (name: string) => {
+    switch (name) {
+      case "name":
+        return this.editContactForm.controls['name'].hasError('required') ? 'You must enter a value' :
+        this.editContactForm.controls['name'].hasError('pattern') ? 'A name must contain only letters, numbers and spaces' :
+        this.editContactForm.controls['name'].hasError('minlength') ? 'Required length is at least 3 characters' :
+           '';
+      case "email":
+        return this.editContactForm.controls['email'].hasError('required') ? 'You must enter a value' :
+          this.editContactForm.controls['email'].hasError('email') ? "An email must contain '@' sign" :
+            '';
+
+      case "phone":
+        return this.editContactForm.controls['phone'].hasError('required') ? 'You must enter a value' :
+          this.editContactForm.controls['phone'].hasError('pattern') ? 'A phone number must consist of only numbers' :
+            '';
+      default:
+        return;
+    }
+   }
+  
+  public updateContact() {
     const { name, email, phone } = this.editContactForm.value;
     const id = this.currentContact.id;
-
-    this.currentContactService.set({ id, name, email, phone });
-    // this.showEdit = false;
-    // this.updateShowEdit.emit(this.showEdit);
-
+    this.storeService.updateContact({ id, name, email, phone });
   };
-
-  public isControlInvalid(controlName: string): boolean {
-const control = this.editContactForm.controls[controlName];
-
- const result = control.invalid && control.touched;
-
- return result;
-}
-
 }

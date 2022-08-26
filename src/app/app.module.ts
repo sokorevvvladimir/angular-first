@@ -5,14 +5,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgToastModule } from 'ng-angular-popup';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 import { AppComponent } from './app.component';
 import { ContactsFormComponent } from './contacts-form/contacts-form.component';
 import { ListComponent } from './list/list.component';
-import { FilterComponent } from './filter/filter.component';
 import { HomeComponent } from './home/home.component';
 import { ContactsComponent } from './contacts/contacts.component';
 import { PlayerComponent } from './player/player.component';
@@ -29,9 +28,10 @@ import { SidenavListComponent } from './sidenav-list/sidenav-list.component';
 import { MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
-import { EditComponentComponent } from './edit-component/edit-component.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { NotifierComponent } from './notifier/notifier.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -46,7 +46,6 @@ const appRoutes: Routes = [
     AppComponent,
     ContactsFormComponent,
     ListComponent,
-    FilterComponent,
     HomeComponent,
     ContactsComponent,
     PlayerComponent,
@@ -54,9 +53,10 @@ const appRoutes: Routes = [
     NotfoundComponent,
     HeaderComponent,
     SidenavListComponent,
-    EditComponentComponent,
     ConfirmDialogComponent,
-    EditDialogComponent
+    EditDialogComponent,
+    FilterPipe,
+    NotifierComponent
   ],
   imports: [
     BrowserModule,
@@ -74,13 +74,13 @@ const appRoutes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatBadgeModule,
-    NgToastModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCardModule,
+    MatSnackBarModule
   ],
   providers: [{ provide: MAT_DIALOG_DATA, useValue: {} },
      { provide: MatDialogRef, useValue: {} }],
   bootstrap: [AppComponent],
   entryComponents: [ConfirmDialogComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

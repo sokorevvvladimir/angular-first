@@ -18,7 +18,7 @@
         <li>
           <a routerLink="/contacts" routerLinkActive="active"
             ><span
-              matBadge="{{ totalContacts }}"
+              matBadge="{{ totalContacts$ | async }}"
               matBadgeOverlap="false"
               matBadgeColor="accent"
               matBadgeSize="small"
