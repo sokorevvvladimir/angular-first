@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Loader } from "@googlemaps/js-api-loader"
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,7 +9,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   templateUrl: './location.component.html',
   styleUrls: ['./location.component.css']
 })
-export class LocationComponent implements OnInit {
+export class LocationComponent implements OnInit, OnDestroy {
 
   private map: google.maps.Map;
   private service: google.maps.places.PlacesService;
@@ -21,8 +21,14 @@ export class LocationComponent implements OnInit {
   private directionsRenderer: google.maps.DirectionsRenderer;
   private search: string;
   private route = false;
+  private showRouteControl: HTMLElement;
   private showRoute: HTMLElement;
+  private clearRouteControl: HTMLElement;
   private clearRoute: HTMLElement;
+  private showUserLocationControl: HTMLElement;
+  private markerCreateListener: google.maps.MapsEventListener;
+  private routeCreateListener: google.maps.MapsEventListener;
+  private routeHideListener: google.maps.MapsEventListener;
   public searchMapForm: FormGroup;
   public isConsentModalOpen = false;
 
@@ -32,6 +38,15 @@ export class LocationComponent implements OnInit {
     this.openDialog(); 
   }
 
+  ngOnDestroy(): void {
+    google.maps.event.removeListener(this.markerCreateListener);
+    google.maps.event.removeListener(this.routeCreateListener);
+    google.maps.event.removeListener(this.routeHideListener);
+    this.showUserLocationControl.removeEventListener('click', this.currentLocationAccess);
+    this.showUserLocationControl.removeEventListener('click', this.locateUser);
+    this.showRouteControl.removeEventListener('click', this.createRoute);
+    this.clearRouteControl.removeEventListener('click', this.removeRoute);
+  }
 private loadMap = (zoomValue: number): void => {
     const loader = new Loader({
       apiKey: "AIzaSyAuYpUkcjl8Y8sdktFT0HSgEdGVlL9h9_o",
@@ -79,18 +94,18 @@ private loadMap = (zoomValue: number): void => {
   )
 
 }
-  private hideShowRoute = (control: HTMLElement) => {
+  private hideShowRoute = (control: HTMLElement): void => {
   control.style.display = "none";
   }
 
-  private showShowRoute = (control: HTMLElement) => {
+  private showShowRoute = (control: HTMLElement): void => {
    
   control.style.display = "block";
     control.style.position = "absolute";
 }
   private createCustomControl = (
     backgroundColor: string, color: string,
-    textContent: string,) => {
+    textContent: string,): HTMLElement => {
   const controlButton = document.createElement('button');
     controlButton.style.backgroundColor = backgroundColor;
   controlButton.style.border = '2px solid #fff';
@@ -110,38 +125,50 @@ private loadMap = (zoomValue: number): void => {
     controlButton.type = 'button';
     return controlButton;
   }
-  
-  private createReturnToMyPosControl = () => {
 
-    const control = this.createCustomControl('#00ff00', 'rgb(25,25,25)', 'My location');
-    control.addEventListener('click', () => {
+  private currentLocationAccess = (): void => {
+this.openDialog();
+  }
+
+  private locateUser = (): void => {
       this.map.setCenter(this.pos);
       this.map.setZoom(13);
       this.infoWindow.setPosition(this.pos);
       this.infoWindow.setContent("Your current location");
       this.infoWindow.open(this.map);
-    })
-    return control;
   }
 
-   private createShowRouteControl = () => {
-    const control = this.createCustomControl('#ff0000', '#fff', 'Show route')
+  private createReturnToMyPosControl = (): HTMLElement => {
 
-    control.addEventListener('click', () => {
-      this.calcRoute();
-      
-    })
-    return control;
+    this.showUserLocationControl = this.createCustomControl('#00ff00', 'rgb(25,25,25)', 'My location');
+    
+    if (!this.isAllowed) {
+      this.showUserLocationControl.addEventListener('click', this.currentLocationAccess)
+      }
+    this.showUserLocationControl.addEventListener('click', this.locateUser)
+    return this.showUserLocationControl;
+  }
+
+  private createRoute = (): void => {
+this.calcRoute();
+  }
+
+   private createShowRouteControl = (): HTMLElement => {
+    this.showRouteControl = this.createCustomControl('#ff0000', '#fff', 'Show route')
+
+    this.showRouteControl.addEventListener('click', this.createRoute)
+    return this.showRouteControl;
    }
   
-  private createClearRouteControl = () => {
-    const control = this.createCustomControl('#ff0000', '#fff', 'Clear route');
+  private removeRoute = (): void => {
+this.deleteRoute();
+  }
+
+  private createClearRouteControl = (): HTMLElement => {
+    this.clearRouteControl = this.createCustomControl('#ff0000', '#fff', 'Clear route');
     
-    control.addEventListener('click', () => {
-      this.deleteRoute();
-      
-    })
-    return control;
+    this.clearRouteControl.addEventListener('click', this.removeRoute)
+    return this.clearRouteControl;
   }
 
   private calculateGeoLocation = (): void => {
@@ -206,7 +233,7 @@ private initForm = (): void => {
   });
   };
 
-  public calcRoute() {
+  public calcRoute(): void {
   if (this.directionsRenderer) { this.directionsRenderer.setMap(null) };
     
         this.directionsService = new google.maps.DirectionsService();
@@ -230,13 +257,13 @@ private initForm = (): void => {
     this.route = true;
   }
   
-  private deleteRoute = () => {
+  private deleteRoute = (): void => {
     this.directionsRenderer.setMap(null);
     this.hideShowRoute(this.clearRoute);
     this.route = false;
   }
 
-  private createMarker(place: google.maps.places.PlaceResult) {
+  private createMarker(place: google.maps.places.PlaceResult): void {
   if (!place.geometry || !place.geometry.location) return;
     if(this.marker) this.marker.setMap(null);
 
@@ -246,13 +273,13 @@ private initForm = (): void => {
   });
   
     
-  google.maps.event.addListener(this.marker, "click", () => {
+  this.markerCreateListener = google.maps.event.addListener(this.marker, "click", () => {
     this.infoWindow.setContent(place.name || "");
     this.infoWindow.setPosition(place.geometry!.location);
     this.infoWindow.open(this.map);
   });
-    
-    google.maps.event.addListener(this.marker, "rightclick", (event: any) => {
+  
+   this.routeCreateListener = google.maps.event.addListener(this.marker, "rightclick", (event: any) => {
       if (this.route) {
         return;
       }
@@ -263,13 +290,13 @@ private initForm = (): void => {
      this.showShowRoute(this.showRoute);
     })
 
-    google.maps.event.addListener(this.map, "click", (event: any) => {
+    this.routeHideListener = google.maps.event.addListener(this.map, "click", (event: any) => {
       
     this.hideShowRoute(this.showRoute);
   });
   }
 
-  public find = () => {
+  public find = (): void => {
     const {search} = this.searchMapForm.value;
     this.search = search;
     const request = {
