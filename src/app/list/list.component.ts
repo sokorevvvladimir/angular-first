@@ -26,7 +26,20 @@ export class ListComponent {
   };
 
   public onEditOpenDialog = (item: Contact): void => {
-   this.dialog.open(EditDialogComponent, {width: '50%', height: '45%', data: item});
+    if (screen.width < 500) {
+      this.dialog.open(EditDialogComponent, {
+      width: '100%',
+      height: '60%', 
+      data: item
+  });
+    } else {
+      this.dialog.open(EditDialogComponent, {
+      width: '50%',
+      height: '60%', 
+      data: item
+  });
+    }
+    
   }
 
 }
