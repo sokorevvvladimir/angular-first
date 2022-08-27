@@ -11,7 +11,6 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 })
 export class LocationComponent implements OnInit {
 
-  public isConsentModalOpen = false;
   private map: google.maps.Map;
   private service: google.maps.places.PlacesService;
   private infoWindow: google.maps.InfoWindow;
@@ -21,37 +20,166 @@ export class LocationComponent implements OnInit {
   private directionsService: google.maps.DirectionsService;
   private directionsRenderer: google.maps.DirectionsRenderer;
   private search: string;
+  private route = false;
+  private showRoute: HTMLElement;
+  private clearRoute: HTMLElement;
+  public searchMapForm: FormGroup;
+  public isConsentModalOpen = false;
 
-  public openDialog = (): void => {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {});
-    dialogRef.afterClosed().subscribe(res => {
-      this.isAllowed = res;
-      this.isConsentModalOpen = true;
+  constructor(private readonly fb: FormBuilder, public dialog: MatDialog) { }
+  
+  ngOnInit(): void {
+    this.openDialog(); 
+  }
 
-      if (this.isAllowed) {
-      const loader = new Loader({
-        apiKey: "AIzaSyAuYpUkcjl8Y8sdktFT0HSgEdGVlL9h9_o",
+private loadMap = (zoomValue: number): void => {
+    const loader = new Loader({
+      apiKey: "AIzaSyAuYpUkcjl8Y8sdktFT0HSgEdGVlL9h9_o",
  
-      });
+    });
 
-      loader.load().then(() => {
-        this.map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
-          center: { lat: 32.371, lng: -16.274 },
-          zoom: 13,
-        });
-        this.infoWindow = new google.maps.InfoWindow();
-        this.service = new google.maps.places.PlacesService(this.map);
-        
-        if (navigator.geolocation) {
+    loader.load().then(() => {
+      this.map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
+        center: { lat: 32.371, lng: -16.274 },
+        zoom: zoomValue,
+        mapTypeControl: true,
+      mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        position: google.maps.ControlPosition.TOP_CENTER,
+      },
+      zoomControl: true,
+      zoomControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_CENTER,
+      },
+      scaleControl: true,
+      streetViewControl: false,
+      fullscreenControl: true,
+      });
+      this.infoWindow = new google.maps.InfoWindow();
+      this.service = new google.maps.places.PlacesService(this.map);
+      const myPositionControlDiv = document.createElement('div');
+      const myPositionControl = this.createReturnToMyPosControl(this.map);
+      myPositionControlDiv.appendChild(myPositionControl);
+      this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(myPositionControlDiv);
+    
+      const showRouteControlDiv = document.createElement('div');
+      const showRouteControl = this.createShowRouteControl(this.map);
+      showRouteControlDiv.appendChild(showRouteControl);
+      this.showRoute = showRouteControlDiv;
+      this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(this.showRoute);
+      this.hideShowRoute(this.showRoute);
+
+      const clearRouteControlDiv = document.createElement('div');
+      const clearRouteControl = this.createClearRouteControl(this.map);
+      clearRouteControlDiv.appendChild(clearRouteControl);
+      this.clearRoute = clearRouteControlDiv;
+      this.map.controls[google.maps.ControlPosition.LEFT_CENTER].push(this.clearRoute);
+    this.hideShowRoute(this.clearRoute);
+    }
+  )
+
+}
+  private hideShowRoute = (control: HTMLElement) => {
+  control.style.display = "none";
+  }
+
+  private showShowRoute = (control: HTMLElement) => {
+   
+  control.style.display = "block";
+    control.style.position = "absolute";
+    // control.style.left = event.pixel.x + 'px';
+    // control.style.top = event.pixel.y + 'px';
+  
+}
+
+  private createReturnToMyPosControl = (map: google.maps.Map) => {
+    const controlButton = document.createElement('button');
+    controlButton.style.backgroundColor = '#00ff00';
+  controlButton.style.border = '2px solid #fff';
+  controlButton.style.borderRadius = '3px';
+  controlButton.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+  controlButton.style.color = 'rgb(25,25,25)';
+  controlButton.style.cursor = 'pointer';
+  controlButton.style.fontFamily = 'Roboto,Arial,sans-serif';
+  controlButton.style.fontSize = '16px';
+  controlButton.style.lineHeight = '38px';
+  controlButton.style.margin = '8px 0 22px';
+  controlButton.style.padding = '0 5px';
+  controlButton.style.textAlign = 'center';
+
+  controlButton.textContent = 'My location';
+  controlButton.title = 'Click to show your location';
+    controlButton.type = 'button';
+    
+    controlButton.addEventListener('click', () => {
+      map.setCenter(this.pos);
+      this.map.setZoom(13);
+      
+    })
+    return controlButton;
+  }
+
+   private createShowRouteControl = (map: google.maps.Map) => {
+    const controlButton = document.createElement('button');
+    controlButton.style.backgroundColor = '#ff0000';
+  controlButton.style.border = '2px solid #fff';
+  controlButton.style.borderRadius = '3px';
+  controlButton.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+  controlButton.style.color = '#fff';
+  controlButton.style.cursor = 'pointer';
+  controlButton.style.fontFamily = 'Roboto,Arial,sans-serif';
+  controlButton.style.fontSize = '16px';
+  controlButton.style.lineHeight = '38px';
+  controlButton.style.margin = '8px 0 22px';
+  controlButton.style.padding = '0 5px';
+  controlButton.style.textAlign = 'center';
+
+  controlButton.textContent = 'Show route';
+  controlButton.title = 'Click to show route';
+    controlButton.type = 'button';
+    
+    controlButton.addEventListener('click', () => {
+      this.calcRoute();
+      
+    })
+    return controlButton;
+   }
+  
+  private createClearRouteControl = (map: google.maps.Map) => {
+    const controlButton = document.createElement('button');
+    controlButton.style.backgroundColor = '#ff0000';
+  controlButton.style.border = '2px solid #fff';
+  controlButton.style.borderRadius = '3px';
+  controlButton.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+  controlButton.style.color = '#fff';
+  controlButton.style.cursor = 'pointer';
+  controlButton.style.fontFamily = 'Roboto,Arial,sans-serif';
+  controlButton.style.fontSize = '16px';
+  controlButton.style.lineHeight = '38px';
+  controlButton.style.margin = '8px 0 22px';
+  controlButton.style.padding = '0 5px';
+  controlButton.style.textAlign = 'center';
+
+  controlButton.textContent = 'Clear route';
+  controlButton.title = 'Click to clear route';
+    controlButton.type = 'button';
+    
+    controlButton.addEventListener('click', () => {
+      this.deleteRoute();
+      
+    })
+    return controlButton;
+  }
+
+  private calculateGeoLocation = (): void => {
+     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position: GeolocationPosition) => {
             const pos = {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
-            };
-           
+            }; 
             this.pos = pos;
-          
             this.infoWindow.setPosition(pos);
             this.infoWindow.setContent("Location found.");
             this.infoWindow.open(this.map);
@@ -66,37 +194,25 @@ export class LocationComponent implements OnInit {
      
       this.handleLocationError(false, this.infoWindow, this.map.getCenter()!);
     }
-      });
-      
-      
-    
-    } else {
-       const loader = new Loader({
-        apiKey: "AIzaSyAuYpUkcjl8Y8sdktFT0HSgEdGVlL9h9_o",
- 
-      });
+  }
+  
+  private openDialog = (): void => {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {});
+    dialogRef.afterClosed().subscribe(res => {
+      this.isAllowed = res;
+      this.isConsentModalOpen = true;
 
-      loader.load().then(() => {
-        this.map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
-          center: { lat: 32.371, lng: -16.274 },
-          zoom: 3,
-        });
-        this.infoWindow = new google.maps.InfoWindow();
-        this.service = new google.maps.places.PlacesService(this.map);
-      });
-    }
+      if (this.isAllowed) {
+        this.loadMap(13);
+        this.calculateGeoLocation();
+        
+      } else {
+        this.loadMap(3);
+      }
     this.initForm();
-    });
-  
-    
-    
+    });  
   }
 
-  
-  ngOnInit(): void {
-    this.openDialog();
-    
-  }
   private handleLocationError(
   browserHasGeolocation: boolean,
   infoWindow: google.maps.InfoWindow,
@@ -110,15 +226,73 @@ export class LocationComponent implements OnInit {
   );
   infoWindow.open(this.map);
   }
-  
-  public searchMapForm: FormGroup;
-  constructor(private readonly fb: FormBuilder, public dialog: MatDialog) { }
-  
+    
 private initForm = (): void => {
   this.searchMapForm = this.fb.group({
    search: ['']
   });
   };
+
+  public calcRoute() {
+  if (this.directionsRenderer) { this.directionsRenderer.setMap(null) };
+    
+        this.directionsService = new google.maps.DirectionsService();
+        this.directionsRenderer = new google.maps.DirectionsRenderer();
+      
+    this.directionsRenderer.setMap(this.map);
+    
+  const request = {
+    origin: this.pos,
+    destination: this.search,
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  this.directionsService.route(request, (result, status) => {
+    if (status == 'OK') {
+      this.directionsRenderer.setDirections(result);
+    }
+  });
+    this.hideShowRoute(this.showRoute);
+    this.showShowRoute(this.clearRoute);
+    this.route = true;
+  }
+  
+  private deleteRoute = () => {
+    this.directionsRenderer.setMap(null);
+    this.hideShowRoute(this.clearRoute);
+  }
+
+  private createMarker(place: google.maps.places.PlaceResult) {
+  if (!place.geometry || !place.geometry.location) return;
+    if(this.marker) this.marker.setMap(null);
+
+  this.marker = new google.maps.Marker({
+    map: this.map,
+    position: place.geometry.location,
+  });
+  
+    
+  google.maps.event.addListener(this.marker, "click", () => {
+    this.infoWindow.setContent(place.name || "");
+    this.infoWindow.setPosition(place.geometry!.location);
+    this.infoWindow.open(this.map);
+  });
+    
+    google.maps.event.addListener(this.marker, "rightclick", (event: any) => {
+      if (this.route) {
+        return;
+      }
+      
+      // const X = event.pixel.x;
+      // const Y = event.pixel.y;
+      
+     this.showShowRoute(this.showRoute);
+    })
+
+    google.maps.event.addListener(this.map, "click", (event: any) => {
+      
+    this.hideShowRoute(this.showRoute);
+  });
+  }
 
   public find = () => {
     const {search} = this.searchMapForm.value;
@@ -146,47 +320,12 @@ private initForm = (): void => {
       }
     }
     );
-    if (this.pos) {
+    this.route = false;
+    // if (this.pos) {
       
-      this.calcRoute();
-    }
+    //   this.calcRoute();
+    // }
     this.searchMapForm.reset();
   }
-
-  private calcRoute() {
-  if (this.directionsRenderer) { this.directionsRenderer.setMap(null) };
-    
-        this.directionsService = new google.maps.DirectionsService();
-        this.directionsRenderer = new google.maps.DirectionsRenderer();
-      
-    this.directionsRenderer.setMap(this.map);
-    
-  const request = {
-    origin: this.pos,
-    destination: this.search,
-    travelMode: google.maps.TravelMode.DRIVING
-  };
-  this.directionsService.route(request, (result, status) => {
-    if (status == 'OK') {
-      this.directionsRenderer.setDirections(result);
-    }
-  });
-}
-
-  private createMarker(place: google.maps.places.PlaceResult) {
-  if (!place.geometry || !place.geometry.location) return;
-    if(this.marker) this.marker.setMap(null);
-
-  this.marker = new google.maps.Marker({
-    map: this.map,
-    position: place.geometry.location,
-  });
-  
-    
-  google.maps.event.addListener(this.marker, "click", () => {
-    this.infoWindow.setContent(place.name || "");
-    this.infoWindow.setPosition(place.geometry!.location);
-    this.infoWindow.open(this.map);
-  });
-}
+   
 }
