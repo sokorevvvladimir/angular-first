@@ -58,19 +58,19 @@ private loadMap = (zoomValue: number): void => {
       this.infoWindow = new google.maps.InfoWindow();
       this.service = new google.maps.places.PlacesService(this.map);
       const myPositionControlDiv = document.createElement('div');
-      const myPositionControl = this.createReturnToMyPosControl(this.map);
+      const myPositionControl = this.createReturnToMyPosControl();
       myPositionControlDiv.appendChild(myPositionControl);
       this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(myPositionControlDiv);
     
       const showRouteControlDiv = document.createElement('div');
-      const showRouteControl = this.createShowRouteControl(this.map);
+      const showRouteControl = this.createShowRouteControl();
       showRouteControlDiv.appendChild(showRouteControl);
       this.showRoute = showRouteControlDiv;
       this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(this.showRoute);
       this.hideShowRoute(this.showRoute);
 
       const clearRouteControlDiv = document.createElement('div');
-      const clearRouteControl = this.createClearRouteControl(this.map);
+      const clearRouteControl = this.createClearRouteControl();
       clearRouteControlDiv.appendChild(clearRouteControl);
       this.clearRoute = clearRouteControlDiv;
       this.map.controls[google.maps.ControlPosition.LEFT_CENTER].push(this.clearRoute);
@@ -87,18 +87,16 @@ private loadMap = (zoomValue: number): void => {
    
   control.style.display = "block";
     control.style.position = "absolute";
-    // control.style.left = event.pixel.x + 'px';
-    // control.style.top = event.pixel.y + 'px';
-  
 }
-
-  private createReturnToMyPosControl = (map: google.maps.Map) => {
-    const controlButton = document.createElement('button');
-    controlButton.style.backgroundColor = '#00ff00';
+  private createCustomControl = (
+    backgroundColor: string, color: string,
+    textContent: string,) => {
+  const controlButton = document.createElement('button');
+    controlButton.style.backgroundColor = backgroundColor;
   controlButton.style.border = '2px solid #fff';
   controlButton.style.borderRadius = '3px';
   controlButton.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-  controlButton.style.color = 'rgb(25,25,25)';
+  controlButton.style.color = color;
   controlButton.style.cursor = 'pointer';
   controlButton.style.fontFamily = 'Roboto,Arial,sans-serif';
   controlButton.style.fontSize = '16px';
@@ -107,68 +105,43 @@ private loadMap = (zoomValue: number): void => {
   controlButton.style.padding = '0 5px';
   controlButton.style.textAlign = 'center';
 
-  controlButton.textContent = 'My location';
-  controlButton.title = 'Click to show your location';
+  controlButton.textContent = textContent;
+
     controlButton.type = 'button';
-    
-    controlButton.addEventListener('click', () => {
-      map.setCenter(this.pos);
-      this.map.setZoom(13);
-      
-    })
     return controlButton;
   }
+  
+  private createReturnToMyPosControl = () => {
 
-   private createShowRouteControl = (map: google.maps.Map) => {
-    const controlButton = document.createElement('button');
-    controlButton.style.backgroundColor = '#ff0000';
-  controlButton.style.border = '2px solid #fff';
-  controlButton.style.borderRadius = '3px';
-  controlButton.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-  controlButton.style.color = '#fff';
-  controlButton.style.cursor = 'pointer';
-  controlButton.style.fontFamily = 'Roboto,Arial,sans-serif';
-  controlButton.style.fontSize = '16px';
-  controlButton.style.lineHeight = '38px';
-  controlButton.style.margin = '8px 0 22px';
-  controlButton.style.padding = '0 5px';
-  controlButton.style.textAlign = 'center';
+    const control = this.createCustomControl('#00ff00', 'rgb(25,25,25)', 'My location');
+    control.addEventListener('click', () => {
+      this.map.setCenter(this.pos);
+      this.map.setZoom(13);
+      this.infoWindow.setPosition(this.pos);
+      this.infoWindow.setContent("Your current location");
+      this.infoWindow.open(this.map);
+    })
+    return control;
+  }
 
-  controlButton.textContent = 'Show route';
-  controlButton.title = 'Click to show route';
-    controlButton.type = 'button';
-    
-    controlButton.addEventListener('click', () => {
+   private createShowRouteControl = () => {
+    const control = this.createCustomControl('#ff0000', '#fff', 'Show route')
+
+    control.addEventListener('click', () => {
       this.calcRoute();
       
     })
-    return controlButton;
+    return control;
    }
   
-  private createClearRouteControl = (map: google.maps.Map) => {
-    const controlButton = document.createElement('button');
-    controlButton.style.backgroundColor = '#ff0000';
-  controlButton.style.border = '2px solid #fff';
-  controlButton.style.borderRadius = '3px';
-  controlButton.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-  controlButton.style.color = '#fff';
-  controlButton.style.cursor = 'pointer';
-  controlButton.style.fontFamily = 'Roboto,Arial,sans-serif';
-  controlButton.style.fontSize = '16px';
-  controlButton.style.lineHeight = '38px';
-  controlButton.style.margin = '8px 0 22px';
-  controlButton.style.padding = '0 5px';
-  controlButton.style.textAlign = 'center';
-
-  controlButton.textContent = 'Clear route';
-  controlButton.title = 'Click to clear route';
-    controlButton.type = 'button';
+  private createClearRouteControl = () => {
+    const control = this.createCustomControl('#ff0000', '#fff', 'Clear route');
     
-    controlButton.addEventListener('click', () => {
+    control.addEventListener('click', () => {
       this.deleteRoute();
       
     })
-    return controlButton;
+    return control;
   }
 
   private calculateGeoLocation = (): void => {
@@ -251,6 +224,7 @@ private initForm = (): void => {
       this.directionsRenderer.setDirections(result);
     }
   });
+    
     this.hideShowRoute(this.showRoute);
     this.showShowRoute(this.clearRoute);
     this.route = true;
@@ -259,6 +233,7 @@ private initForm = (): void => {
   private deleteRoute = () => {
     this.directionsRenderer.setMap(null);
     this.hideShowRoute(this.clearRoute);
+    this.route = false;
   }
 
   private createMarker(place: google.maps.places.PlaceResult) {
@@ -281,9 +256,9 @@ private initForm = (): void => {
       if (this.route) {
         return;
       }
-      
-      // const X = event.pixel.x;
-      // const Y = event.pixel.y;
+      if (!this.pos) {
+        return;
+      }
       
      this.showShowRoute(this.showRoute);
     })
@@ -315,16 +290,11 @@ private initForm = (): void => {
 
         this.map.setCenter(results[0].geometry!.location!);
         this.map.setZoom(13);
-        
-  
+
       }
     }
     );
     this.route = false;
-    // if (this.pos) {
-      
-    //   this.calcRoute();
-    // }
     this.searchMapForm.reset();
   }
    
