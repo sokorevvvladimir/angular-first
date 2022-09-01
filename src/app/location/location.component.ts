@@ -279,7 +279,7 @@ private initForm = (): void => {
     this.infoWindow.open(this.map);
   });
   
-   this.routeCreateListener = google.maps.event.addListener(this.marker, "rightclick", (event: any) => {
+   this.routeCreateListener = google.maps.event.addListener(this.marker, "click", (event: any) => {
       if (this.route) {
         return;
       }

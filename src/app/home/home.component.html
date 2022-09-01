@@ -1,1 +1,12 @@
-<p>home works!</p>
+<div class="container">
+  <h1 class="header">Organizer</h1>
+  <button
+    class="toggleWeeknd"
+    mat-flat-button
+    color="warn"
+    (click)="toggleWeekends()"
+  >
+    Toggle weekends
+  </button>
+  <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+</div>

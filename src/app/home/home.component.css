@@ -1,0 +1,13 @@
+.container {
+    padding: 0 20px;
+}
+
+.toggleWeeknd {
+    margin-bottom: 10px;
+    width: 146px;
+}
+
+.header {
+    text-transform: uppercase;
+    text-align: center;
+}

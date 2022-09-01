@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
@@ -32,6 +32,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { NotifierComponent } from './notifier/notifier.component';
+import { AddEventDialogComponent } from './add-event-dialog/add-event-dialog.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -56,7 +57,8 @@ const appRoutes: Routes = [
     ConfirmDialogComponent,
     EditDialogComponent,
     FilterPipe,
-    NotifierComponent
+    NotifierComponent,
+    AddEventDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -82,5 +84,6 @@ const appRoutes: Routes = [
      { provide: MatDialogRef, useValue: {} }],
   bootstrap: [AppComponent],
   entryComponents: [ConfirmDialogComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

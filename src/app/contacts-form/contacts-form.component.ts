@@ -28,19 +28,34 @@ ngOnInit(): void {
   public getErrorMessage = (name: string) => {
     switch (name) {
       case "name":
-        return this.contactsForm.controls['name'].hasError('required') ? 'You must enter a value' :
-        this.contactsForm.controls['name'].hasError('pattern') ? 'A name must contain only letters, numbers and spaces' :
-        this.contactsForm.controls['name'].hasError('minlength') ? 'Required length is at least 3 characters' :
-           '';
+        if (this.contactsForm.controls['name'].hasError('required')) {
+          return 'You must enter a value'
+        } else if (this.contactsForm.controls['name'].hasError('pattern')) {
+          return 'A name must contain only letters, numbers and spaces'
+        } else if (this.contactsForm.controls['name'].hasError('minlength')) {
+          return 'Required length is at least 3 characters'
+        } else {
+          return ''
+        }
+   
       case "email":
-        return this.contactsForm.controls['email'].hasError('required') ? 'You must enter a value' :
-          this.contactsForm.controls['email'].hasError('email') ? "An email must contain '@' sign" :
-            '';
+        if (this.contactsForm.controls['email'].hasError('required')) {
+          return 'You must enter a value'
+        } else if (this.contactsForm.controls['email'].hasError('email')) {
+          return "An email must contain '@' sign"
+        } else {
+          return ''
+        }
 
       case "phone":
-        return this.contactsForm.controls['phone'].hasError('required') ? 'You must enter a value' :
-          this.contactsForm.controls['phone'].hasError('pattern') ? 'A phone number must consist of only numbers' :
-            '';
+        if (this.contactsForm.controls['phone'].hasError('required')) {
+          return 'You must enter a value'
+        } else if (this.contactsForm.controls['phone'].hasError('pattern')) {
+          return 'A phone number must consist of only numbers'
+        } else {
+          return ''
+        }
+
       default:
         return;
     }
