@@ -33,6 +33,7 @@ import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { NotifierComponent } from './notifier/notifier.component';
 import { AddEventDialogComponent } from './add-event-dialog/add-event-dialog.component';
+import { DeleteEventDialogComponent } from './delete-event-dialog/delete-event-dialog.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -58,7 +59,8 @@ const appRoutes: Routes = [
     EditDialogComponent,
     FilterPipe,
     NotifierComponent,
-    AddEventDialogComponent
+    AddEventDialogComponent,
+    DeleteEventDialogComponent
   ],
   imports: [
     BrowserModule,

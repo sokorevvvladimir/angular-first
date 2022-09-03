@@ -12,7 +12,10 @@ export class AddEventDialogComponent implements OnInit {
   public addEventForm: FormGroup;
   public errorMessage: string;
  
-  constructor(public dialogRef: MatDialogRef<AddEventDialogComponent>, @Inject(MAT_DIALOG_DATA) public dateObj: any, private readonly fb: FormBuilder, private readonly storeService: StoreService) { }
+  constructor(public dialogRef: MatDialogRef<AddEventDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public dateObj: any,
+    private readonly fb: FormBuilder,
+    private readonly storeService: StoreService) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -21,21 +24,36 @@ export class AddEventDialogComponent implements OnInit {
     }
   }
   private initForm(): void {
+    // console.log(this.dateObj.info);
+    // console.log(this.dateObj.info.date);
+    // console.log(new Date(this.dateObj.info.date).toISOString().substring(0, 16));
+    // console.log(new Date(this.dateObj.info.date).toISOString().slice(0, -1)); 
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000; 
+    const duration = 3600000;
+    const startTime = (new Date(this.dateObj.info.date - tzoffset)).toISOString().substring(0, 16);
+    const endTime = (new Date(this.dateObj.info.date - tzoffset + duration)).toISOString().substring(0, 16);
+    // console.log(tzoffset);
+    // console.log(localISOTime);
+    // console.log(endTime);
     this.addEventForm = this.fb.group({
       title: ['', [Validators.required]],
-      start: [new Date(this.dateObj.info.date), [Validators.required]],
-      end: ['']
+      start: [startTime, [Validators.required]],
+      end: [endTime]
     })
   }
   private getErrorMessage(): void {
+    
     if (this.addEventForm.controls['title'].hasError('required') ||
       this.addEventForm.controls['start'].hasError('required')) {
+    
       this.errorMessage = 'You must enter a value';
+      return;
     }
+    
     this.errorMessage = '';
   }
 
-  public addEvent() {
+  public addEvent(): void {
     this.storeService.setMyEvent(this.addEventForm.value, this.dateObj.calendarApi)
   }
 

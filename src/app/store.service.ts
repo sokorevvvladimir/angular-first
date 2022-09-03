@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Contact } from './contact';
-import { BehaviorSubject } from 'rxjs';
+import { MyEvent } from './event';
+import { BehaviorSubject, map, filter} from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 import { TotalContactsService } from './total-contacts.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,23 +15,23 @@ export class StoreService {
   public contacts$ = new BehaviorSubject<Contact[]>([]);
   private contacts: Contact[] = [];
 
-  public myEvents$ = new BehaviorSubject<any[]>([])
+  public myEvents$ = new BehaviorSubject<MyEvent[]>([])
 
   constructor(private readonly snackBar: MatSnackBar,
     private readonly localStorageService: LocalStorageService,
     private readonly totalContactsService: TotalContactsService) { }
 
-  private openSnackBar (message: string, 
+  public openSnackBar (message: string, 
     messageType: 'error' | 'success'): void {
     this.snackBar.openFromComponent(NotifierComponent,
       {
         data: { message, type: messageType },
-        duration: 2000,
+        duration: 3000,
         horizontalPosition: 'end', panelClass: messageType
       });
   }
 
-  public onSameName (name: string) {
+  public onSameName (name: string): Contact | undefined {
     return this.contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())
   }
  
@@ -47,7 +48,7 @@ export class StoreService {
   this.openSnackBar('Contact added!',  'success');
   }
 
-  public updateContact(contact: Contact) {
+  public updateContact(contact: Contact): void {
     const idx = this.contacts.findIndex(item => item.id === contact.id);
     this.contacts.splice(idx, 1, contact);
     this.contacts$.next(this.contacts);
@@ -68,19 +69,71 @@ export class StoreService {
   this.openSnackBar('Contact deleted!',  'success');
   }
 
-  public getMyEvents(): any[] {
+  public getMyEvents(): MyEvent[] {
     const myEvents = this.localStorageService.get('myEvents') || [];
     this.myEvents$.next(myEvents);
     return myEvents;
   }
 
-  public setMyEvent(myEvent: {title: string, start: Date, end?: Date}, calendarApi: any): void {
+  public setMyEvent(myEvent: {title: string, start: string, end: string}, calendarApi: any): void {
   const eventToAdd = {id: uuidv4(), title: myEvent.title, start: myEvent.start, end: myEvent.end, editable: true}
-    this.myEvents$.subscribe(myEvents => {
+    // console.log(typeof myEvent.start);
+    // console.log(myEvent.start);
+    // console.log(typeof myEvent.end);
+    // console.log(myEvent.end);
+    this.myEvents$.pipe(map(myEvents => {
+      // console.log(eventToAdd);
       myEvents.push(eventToAdd);
       calendarApi.addEvent(eventToAdd);
      this.localStorageService.set('myEvents', myEvents);
     this.openSnackBar('Event added!', 'success');
-    }); 
+    })).subscribe()
   }
+
+  public updateEvent(eventInfo: any, updatedStart: string, updatedEnd: string): void {
+    // console.log(updatedStart);
+    // console.log(updatedEnd);
+    this.myEvents$.pipe(map(items => items.findIndex(item => item.id === eventInfo.event._def.publicId)))
+      .subscribe(idx => {
+        const eventToUpdate = {
+          id: eventInfo.event._def.publicId,
+          title: eventInfo.event._def.title,
+          start: updatedStart,
+          end: updatedEnd,
+          editable: true
+        }
+        // console.log(eventToUpdate);
+        this.myEvents$.pipe(map(myEvents => {
+        myEvents.splice(idx, 1, eventToUpdate);
+        this.localStorageService.set('myEvents', myEvents)})).subscribe()
+      });
+   
+  }
+
+  public modalUpdate(myEvent: {title: string, start: string, end: string}, id: string): void {
+
+    this.myEvents$.pipe(map(items => items.findIndex(item => item.id === id)))
+      .subscribe(idx => {
+        const eventToUpdate = {
+          id,
+          title: myEvent.title,
+          start: myEvent.start,
+          end: myEvent.end,
+          editable: true
+        }
+        this.myEvents$.pipe(map(myEvents => {
+        myEvents.splice(idx, 1, eventToUpdate);
+        this.localStorageService.set('myEvents', myEvents)})).subscribe()
+      });
+    
+  }
+
+  public deleteEvent(id: string): void {
+    this.myEvents$.pipe(map(items => items.findIndex(item => item.id === id)))
+      .subscribe(idx => this.myEvents$.pipe(map(myEvents => {
+        myEvents.splice(idx, 1);
+        this.localStorageService.set('myEvents', myEvents)
+      })).subscribe()
+    )
+  };
 }

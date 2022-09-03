@@ -1,16 +1,16 @@
 <mat-dialog-content>
-  <form [formGroup]="addEventForm" fxLayout="column">
+  <form [formGroup]="deleteEventForm" fxLayout="column">
     <mat-form-field appearance="outline">
       <mat-label>Enter event title</mat-label>
       <input matInput formControlName="title" />
-      <mat-error *ngIf="addEventForm.controls['title'].invalid">{{
+      <mat-error *ngIf="deleteEventForm.controls['title'].invalid">{{
         errorMessage
       }}</mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Set start time</mat-label>
       <input matInput formControlName="start" type="datetime-local" />
-      <mat-error *ngIf="addEventForm.controls['start'].invalid">
+      <mat-error *ngIf="deleteEventForm.controls['start'].invalid">
         {{ errorMessage }}
       </mat-error>
     </mat-form-field>
@@ -25,10 +25,19 @@
     mat-raised-button
     color="primary"
     type="submit"
-    [disabled]="addEventForm.invalid"
+    [disabled]="deleteEventForm.invalid"
     [mat-dialog-close]="true"
-    (click)="addEvent()"
+    (click)="updateEvent()"
   >
-    Add event
+    Update event
+  </button>
+  <button
+    mat-raised-button
+    color="warn"
+    type="submit"
+    (click)="deleteEvent()"
+    [mat-dialog-close]="true"
+  >
+    Delete event
   </button>
 </mat-dialog-actions>
