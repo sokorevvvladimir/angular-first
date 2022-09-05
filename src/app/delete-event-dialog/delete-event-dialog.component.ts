@@ -26,10 +26,10 @@ export class DeleteEventDialogComponent implements OnInit {
 
   private initForm(): void {
     const tzoffset = (new Date()).getTimezoneOffset() * 60000; 
-    const localISOStart = (new Date(this.dateObj.event.start - tzoffset)).toISOString().substring(0, 16);
-    const localISOEnd = (new Date(this.dateObj.event.end - tzoffset)).toISOString().substring(0, 16);
+    const localISOStart = (new Date(this.dateObj.arg.event.start - tzoffset)).toISOString().substring(0, 16);
+    const localISOEnd = (new Date(this.dateObj.arg.event.end - tzoffset)).toISOString().substring(0, 16);
     this.deleteEventForm = this.fb.group({
-      title: [this.dateObj.event._def.title, [Validators.required]],
+      title: [this.dateObj.arg.event._def.title, [Validators.required]],
       start: [localISOStart, [Validators.required]],
       end: [localISOEnd]
     })
@@ -46,10 +46,10 @@ export class DeleteEventDialogComponent implements OnInit {
     this.errorMessage = '';
   }
   public updateEvent(): void {
-    this.storeService.modalUpdate(this.deleteEventForm.value, this.dateObj.event._def.publicId);
+    this.storeService.modalUpdate(this.deleteEventForm.value, this.dateObj.arg.event._def.publicId, this.dateObj.calendarApi);
 }
   public deleteEvent(): void {
-    this.storeService.deleteEvent(this.dateObj.event._def.publicId);
+    this.storeService.deleteEvent(this.dateObj.arg.event);
   }
 
 }

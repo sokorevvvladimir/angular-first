@@ -110,7 +110,11 @@ export class StoreService {
    
   }
 
-  public modalUpdate(myEvent: {title: string, start: string, end: string}, id: string): void {
+  public modalUpdate(myEvent: {title: string, start: string, end: string}, id: string, calendarApi: any): void {
+    const eventToUpdate = calendarApi.getEventById(id);
+    eventToUpdate.setStart(myEvent.start);
+    eventToUpdate.setEnd(myEvent.end);
+    eventToUpdate.setProp("title", myEvent.title);
 
     this.myEvents$.pipe(map(items => items.findIndex(item => item.id === id)))
       .subscribe(idx => {
@@ -128,12 +132,15 @@ export class StoreService {
     
   }
 
-  public deleteEvent(id: string): void {
-    this.myEvents$.pipe(map(items => items.findIndex(item => item.id === id)))
+  public deleteEvent(event: any): void {
+    event.remove();
+    this.myEvents$.pipe(map(items => items.findIndex(item => item.id === event._def.publicId)))
       .subscribe(idx => this.myEvents$.pipe(map(myEvents => {
         myEvents.splice(idx, 1);
         this.localStorageService.set('myEvents', myEvents)
       })).subscribe()
     )
+    
   };
+
 }

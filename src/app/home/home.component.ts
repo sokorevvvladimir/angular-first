@@ -102,17 +102,18 @@ public calendarOptions: CalendarOptions = {
   }
 
   private onOpenDeleteEventDialog(arg: any): void {
+    let calendarApi = this.calendarRef.nativeElement.getApi();
     if (screen.width < 500) {
       this.dialog.open(DeleteEventDialogComponent, {
         width: '100%',
         height: '60%',
-        data: arg
+        data: { arg, calendarApi }
       })
 } else {
       this.dialog.open(DeleteEventDialogComponent, {
         width: '50%',
         height: '60%',
-        data: arg
+        data: { arg, calendarApi }
       })
 }
   }
