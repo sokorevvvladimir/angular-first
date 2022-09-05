@@ -38,7 +38,6 @@ public calendarOptions: CalendarOptions = {
   forceEventDuration: true,
   editable: true,
   droppable: true,
-  dragScroll: true,
   
   drop: this.handleExternalEventDrop.bind(this),
   eventReceive: this.handleExternalEventReceiveDrop.bind(this),
@@ -58,8 +57,9 @@ public calendarOptions: CalendarOptions = {
       eventData: eventEl => {
         if (eventEl.innerText === 'Business lunch*'
           || eventEl.innerText === 'Business meeting*') {
+      
           return {
-            title: eventEl.innerText,
+            title: eventEl.innerText.slice(0, -1),
             constraint: 'businessHours',
             backgroundColor: '#257e4a',
             borderColor: '#257e4a',
@@ -68,6 +68,7 @@ public calendarOptions: CalendarOptions = {
         }
         return {
           title: eventEl.innerText,
+          id: uuidv4()
         }
     }
   });
@@ -110,12 +111,14 @@ public calendarOptions: CalendarOptions = {
   }
   
   private handleEventDrop(eventDropInfo: any): void {
+   
     const localISOStart = (new Date(eventDropInfo.event._instance?.range.start)).toISOString().substring(0, 16);
     const localISOEnd = (new Date(eventDropInfo.event._instance?.range.end)).toISOString().substring(0, 16);
     this.storeService.updateEvent(eventDropInfo, localISOStart.toString(), localISOEnd.toString())
   }
 
   private handleEventResize(eventResizeInfo: any): void {
+   
     const localISOStart = (new Date(eventResizeInfo.event._instance?.range.start)).toISOString().substring(0, 16);
     const localISOEnd = (new Date(eventResizeInfo.event._instance?.range.end)).toISOString().substring(0, 16);
     this.storeService.updateEvent(eventResizeInfo, localISOStart.toString(), localISOEnd.toString());
