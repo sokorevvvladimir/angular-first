@@ -24,17 +24,11 @@ export class AddEventDialogComponent implements OnInit {
     }
   }
   private initForm(): void {
-    // console.log(this.dateObj.info);
-    // console.log(this.dateObj.info.date);
-    // console.log(new Date(this.dateObj.info.date).toISOString().substring(0, 16));
-    // console.log(new Date(this.dateObj.info.date).toISOString().slice(0, -1)); 
     const tzoffset = (new Date()).getTimezoneOffset() * 60000; 
     const duration = 3600000;
     const startTime = (new Date(this.dateObj.info.date - tzoffset)).toISOString().substring(0, 16);
     const endTime = (new Date(this.dateObj.info.date - tzoffset + duration)).toISOString().substring(0, 16);
-    // console.log(tzoffset);
-    // console.log(localISOTime);
-    // console.log(endTime);
+  
     this.addEventForm = this.fb.group({
       title: ['', [Validators.required]],
       start: [startTime, [Validators.required]],

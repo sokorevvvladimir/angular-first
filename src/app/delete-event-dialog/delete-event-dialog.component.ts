@@ -46,7 +46,7 @@ export class DeleteEventDialogComponent implements OnInit {
     this.errorMessage = '';
   }
   public updateEvent(): void {
-    this.storeService.modalUpdate(this.deleteEventForm.value, this.dateObj.arg.event._def.publicId, this.dateObj.calendarApi);
+    this.storeService.modalUpdate(this.deleteEventForm.value, this.dateObj, this.dateObj.calendarApi);
 }
   public deleteEvent(): void {
     this.storeService.deleteEvent(this.dateObj.arg.event);

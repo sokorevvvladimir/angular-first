@@ -1,14 +1,16 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CalendarOptions, FullCalendarElement, defineFullCalendarElement } from '@fullcalendar/web-component';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import interactionPlugin, {Draggable} from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEventDialogComponent } from '../add-event-dialog/add-event-dialog.component';
 import { DeleteEventDialogComponent } from '../delete-event-dialog/delete-event-dialog.component';
 import { StoreService } from '../store.service';
+import { v4 as uuidv4 } from 'uuid';
 
 defineFullCalendarElement();
+
 
 @Component({
   selector: 'app-home',
@@ -34,7 +36,12 @@ public calendarOptions: CalendarOptions = {
   events: this.myEvents,
   nowIndicator: true,
   forceEventDuration: true,
-
+  editable: true,
+  droppable: true,
+  dragScroll: true,
+  
+  drop: this.handleExternalEventDrop.bind(this),
+  eventReceive: this.handleExternalEventReceiveDrop.bind(this),
   eventClick: this.handleEventClick.bind(this),
   dateClick: this.handleDateClick.bind(this),
   eventAllow: this.eventAllowFunc.bind(this),
@@ -45,6 +52,25 @@ public calendarOptions: CalendarOptions = {
   constructor(public dialog: MatDialog, private readonly storeService: StoreService) { }
 
   ngOnInit(): void {
+  const containerEl = document.querySelector('.external-events') as HTMLElement;
+    new Draggable(containerEl, {
+      itemSelector: '.fc-event',
+      eventData: eventEl => {
+        if (eventEl.innerText === 'Business lunch*'
+          || eventEl.innerText === 'Business meeting*') {
+          return {
+            title: eventEl.innerText,
+            constraint: 'businessHours',
+            backgroundColor: '#257e4a',
+            borderColor: '#257e4a',
+            id: uuidv4()
+          }
+        }
+        return {
+          title: eventEl.innerText,
+        }
+    }
+  });
   }
 
   public toggleWeekends(): void {
@@ -54,6 +80,17 @@ public calendarOptions: CalendarOptions = {
     }
   }
 
+  private handleExternalEventDrop(info: any): void {
+    const checkboxEl = document.querySelector('#drop-remove') as HTMLInputElement;
+    if (checkboxEl.checked) {
+      info.draggedEl.parentNode.removeChild(info.draggedEl);
+    }
+}
+
+  private handleExternalEventReceiveDrop(info: any): void {
+    this.storeService.setMyExternalEvent(info.event);
+  }
+  
   private handleDateClick(info: any): void {
     if (info.date.getTime() < new Date().setHours(0, 0, 0, 0)) {
       return;

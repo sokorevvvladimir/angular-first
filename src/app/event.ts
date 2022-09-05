@@ -1,7 +1,10 @@
 export interface MyEvent {
-    editable: boolean,
-    end: string,
+    end?: string,
     start: string,
     id: string,
-    title: string
+    title: string,
+    allDay?: boolean,
+    constraint?: boolean,
+    backgroundColor?: string,
+    borderColor?: string
 }

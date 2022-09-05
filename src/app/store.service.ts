@@ -75,14 +75,9 @@ export class StoreService {
     return myEvents;
   }
 
-  public setMyEvent(myEvent: {title: string, start: string, end: string}, calendarApi: any): void {
-  const eventToAdd = {id: uuidv4(), title: myEvent.title, start: myEvent.start, end: myEvent.end, editable: true}
-    // console.log(typeof myEvent.start);
-    // console.log(myEvent.start);
-    // console.log(typeof myEvent.end);
-    // console.log(myEvent.end);
+  public setMyEvent(myEvent: { title: string, start: string, end?: string }, calendarApi: any): void {
+    const eventToAdd = { id: uuidv4(), title: myEvent.title, start: myEvent.start, end: myEvent.end }
     this.myEvents$.pipe(map(myEvents => {
-      // console.log(eventToAdd);
       myEvents.push(eventToAdd);
       calendarApi.addEvent(eventToAdd);
      this.localStorageService.set('myEvents', myEvents);
@@ -90,9 +85,17 @@ export class StoreService {
     })).subscribe()
   }
 
+  public setMyExternalEvent(externalEvent: any): void {
+   
+    const externalEventToAdd = { backgroundColor: externalEvent.backgroundColor, borderColor: externalEvent.borderColor, constraint: externalEvent.constraint, allDay: externalEvent.allDay, start: externalEvent.start, end: externalEvent.end, title: externalEvent.title, id: externalEvent.id }
+    this.myEvents$.pipe(map(myEvents => {
+      myEvents.push(externalEventToAdd);
+      this.localStorageService.set('myEvents', myEvents);
+      this.openSnackBar('Event added!', 'success');
+   })).subscribe()
+  }
+
   public updateEvent(eventInfo: any, updatedStart: string, updatedEnd: string): void {
-    // console.log(updatedStart);
-    // console.log(updatedEnd);
     this.myEvents$.pipe(map(items => items.findIndex(item => item.id === eventInfo.event._def.publicId)))
       .subscribe(idx => {
         const eventToUpdate = {
@@ -100,21 +103,27 @@ export class StoreService {
           title: eventInfo.event._def.title,
           start: updatedStart,
           end: updatedEnd,
-          editable: true
+          backgroundColor: eventInfo.event.backgroundColor,
+          borderColor: eventInfo.event.borderColor,
+          constraint: eventInfo.event.constraint
         }
-        // console.log(eventToUpdate);
         this.myEvents$.pipe(map(myEvents => {
-        myEvents.splice(idx, 1, eventToUpdate);
-        this.localStorageService.set('myEvents', myEvents)})).subscribe()
+          myEvents.splice(idx, 1, eventToUpdate);
+          this.localStorageService.set('myEvents', myEvents);
+          this.openSnackBar('Event updated!', 'success');
+        })).subscribe(); 
       });
-   
   }
 
-  public modalUpdate(myEvent: {title: string, start: string, end: string}, id: string, calendarApi: any): void {
+  public modalUpdate(myEvent: {title: string, start: string, end: string}, idObj: any, calendarApi: any): void {
+    const id = idObj.arg.event._def.publicId;
     const eventToUpdate = calendarApi.getEventById(id);
     eventToUpdate.setStart(myEvent.start);
     eventToUpdate.setEnd(myEvent.end);
     eventToUpdate.setProp("title", myEvent.title);
+    eventToUpdate.setProp("backgroundColor", idObj.arg.event.backgroundColor);
+    eventToUpdate.setProp("borderColor", idObj.arg.event.borderColor);
+    eventToUpdate.setProp("constraint", idObj.arg.event.constraint);
 
     this.myEvents$.pipe(map(items => items.findIndex(item => item.id === id)))
       .subscribe(idx => {
@@ -123,13 +132,16 @@ export class StoreService {
           title: myEvent.title,
           start: myEvent.start,
           end: myEvent.end,
-          editable: true
+          backgroundColor: idObj.arg.event.backgroundColor,
+          borderColor: idObj.arg.event.borderColor,
+          constraint: idObj.arg.event.constraint
         }
         this.myEvents$.pipe(map(myEvents => {
-        myEvents.splice(idx, 1, eventToUpdate);
-        this.localStorageService.set('myEvents', myEvents)})).subscribe()
+          myEvents.splice(idx, 1, eventToUpdate);
+          this.localStorageService.set('myEvents', myEvents);
+          this.openSnackBar('Event updated!', 'success');
+        })).subscribe(); 
       });
-    
   }
 
   public deleteEvent(event: any): void {
@@ -137,10 +149,9 @@ export class StoreService {
     this.myEvents$.pipe(map(items => items.findIndex(item => item.id === event._def.publicId)))
       .subscribe(idx => this.myEvents$.pipe(map(myEvents => {
         myEvents.splice(idx, 1);
-        this.localStorageService.set('myEvents', myEvents)
+        this.localStorageService.set('myEvents', myEvents);
+        this.openSnackBar('Event deleted!', 'success');
       })).subscribe()
     )
-    
   };
-
 }
