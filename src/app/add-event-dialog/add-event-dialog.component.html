@@ -1,34 +1,33 @@
 <mat-dialog-content>
-  <form [formGroup]="addEventForm" fxLayout="column">
-    <mat-form-field appearance="outline">
-      <mat-label>Enter event title</mat-label>
-      <input matInput formControlName="title" />
-      <mat-error *ngIf="addEventForm.controls['title'].invalid">{{
-        errorMessage
-      }}</mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Set start time</mat-label>
-      <input matInput formControlName="start" type="datetime-local" />
-      <mat-error *ngIf="addEventForm.controls['start'].invalid">
-        {{ errorMessage }}
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Set end time</mat-label>
-      <input matInput formControlName="end" type="datetime-local" />
-    </mat-form-field>
-  </form>
+    <form [formGroup]="addEventForm" fxLayout="column">
+        <mat-form-field appearance="outline">
+            <mat-label>Enter event title</mat-label>
+            <input matInput formControlName="title" />
+            <mat-error *ngIf="addEventForm.controls['title'].invalid">{{
+                errorMessage
+            }}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Set start time</mat-label>
+            <input matInput formControlName="start" type="datetime-local" />
+            <mat-error *ngIf="addEventForm.controls['start'].invalid">
+                {{ errorMessage }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Set end time</mat-label>
+            <input matInput formControlName="end" type="datetime-local" />
+        </mat-form-field>
+    </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button
-    mat-raised-button
-    color="primary"
-    type="submit"
-    [disabled]="addEventForm.invalid"
-    [mat-dialog-close]="true"
-    (click)="addEvent()"
-  >
-    Add event
-  </button>
+    <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="addEventForm.invalid"
+        [mat-dialog-close]="true"
+        (click)="addEvent()">
+        Add event
+    </button>
 </mat-dialog-actions>

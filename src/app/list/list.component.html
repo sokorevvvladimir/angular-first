@@ -1,44 +1,41 @@
 <mat-form-field appearance="outline">
-  <mat-label>Find contact by name</mat-label>
-  <input
-    matInput
-    placeholder="Type contact name..."
-    [(ngModel)]="filterValue"
-    name="filterValue"
-    #filter
-  />
-  <mat-icon matSuffix>search</mat-icon>
+    <mat-label>Find contact by name</mat-label>
+    <input
+        matInput
+        placeholder="Type contact name..."
+        [(ngModel)]="filterValue"
+        name="filterValue"
+        #filter />
+    <mat-icon matSuffix>search</mat-icon>
 </mat-form-field>
 <div
-  *ngIf="(contacts$ | async | filter: filterValue)!.length === 0"
-  class="notification"
->
-  Nothing here so far
+    *ngIf="(contacts$ | async | filter: filterValue)!.length === 0"
+    class="notification">
+    Nothing here so far
 </div>
 <mat-list role="list">
-  <mat-list-item
-    role="listitem"
-    *ngFor="let item of contacts$ | async | filter: filterValue"
-    class="item"
-  >
-    <span class="span">{{ item.name }}: {{ item.phone }} {{ item.email }}</span>
-    <button
-      class="list-button"
-      mat-raised-button
-      color="secondary"
-      type="submit"
-      (click)="onEditOpenDialog(item)"
-    >
-      Edit
-    </button>
-    <button
-      class="list-button"
-      mat-raised-button
-      color="warn"
-      type="submit"
-      (click)="onDelete(item.id)"
-    >
-      Delete
-    </button>
-  </mat-list-item>
+    <mat-list-item
+        role="listitem"
+        *ngFor="let item of contacts$ | async | filter: filterValue"
+        class="item">
+        <span class="span"
+            >{{ item.name }}: {{ item.phone }} {{ item.email }}</span
+        >
+        <button
+            class="list-button"
+            mat-raised-button
+            color="secondary"
+            type="submit"
+            (click)="onEditOpenDialog(item)">
+            Edit
+        </button>
+        <button
+            class="list-button"
+            mat-raised-button
+            color="warn"
+            type="submit"
+            (click)="onDelete(item.id)">
+            Delete
+        </button>
+    </mat-list-item>
 </mat-list>

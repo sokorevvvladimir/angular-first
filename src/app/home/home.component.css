@@ -8,9 +8,9 @@
 }
 
 .toggleWeeknd {
-   align-self: flex-end;
+    align-self: flex-end;
     width: 146px;
-     margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .header {
@@ -23,13 +23,13 @@
     top: 40%;
     left: 85%;
     z-index: 5;
-   
+
     border-radius: 3px;
-background-color: #dfdfdf;
-padding: 10px;
-border: 1px solid #7a7a7a;
-width: 130px;
-display: inline-block;
+    background-color: #dfdfdf;
+    padding: 10px;
+    border: 1px solid #7a7a7a;
+    width: 131px;
+    display: inline-block;
 }
 
 .external-events-list {
@@ -56,6 +56,5 @@ display: inline-block;
 
 .asterisk {
     color: #257e4a;
-    /* font-size: 16px; */
     font-weight: 700;
 }

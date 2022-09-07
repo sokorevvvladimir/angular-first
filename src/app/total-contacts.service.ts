@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class TotalContactsService {
-  public totalContacts$ = new BehaviorSubject<number>(0);
-  
-  constructor() { }
+    public totalContacts$ = new BehaviorSubject<number>(0);
 
-  public set(value: number): void {
-    this.totalContacts$.next(value);
-  }
+    constructor() {}
+
+    public set(value: number): void {
+        this.totalContacts$.next(value);
+    }
 }

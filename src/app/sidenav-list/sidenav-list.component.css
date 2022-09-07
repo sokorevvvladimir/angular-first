@@ -3,7 +3,8 @@ a {
     color: #ffffff;
 }
 
-a:hover, a:active {
+a:hover,
+a:active {
     color: #2c2c2c;
 }
 

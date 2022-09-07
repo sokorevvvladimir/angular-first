@@ -5,9 +5,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+    MatDialogModule,
+    MatDialogRef,
+    MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AppComponent } from './app.component';
 import { ContactsFormComponent } from './contacts-form/contacts-form.component';
@@ -25,7 +29,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { HeaderComponent } from './header/header.component';
 import { SidenavListComponent } from './sidenav-list/sidenav-list.component';
-import { MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
@@ -36,56 +40,58 @@ import { AddEventDialogComponent } from './add-event-dialog/add-event-dialog.com
 import { DeleteEventDialogComponent } from './delete-event-dialog/delete-event-dialog.component';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'contacts', component: ContactsComponent },
-  { path: 'player', component: PlayerComponent },
-  { path: 'location', component: LocationComponent },
-  {path: '**', component: NotfoundComponent}
+    { path: '', component: HomeComponent },
+    { path: 'contacts', component: ContactsComponent },
+    { path: 'player', component: PlayerComponent },
+    { path: 'location', component: LocationComponent },
+    { path: '**', component: NotfoundComponent },
 ];
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ContactsFormComponent,
-    ListComponent,
-    HomeComponent,
-    ContactsComponent,
-    PlayerComponent,
-    LocationComponent,
-    NotfoundComponent,
-    HeaderComponent,
-    SidenavListComponent,
-    ConfirmDialogComponent,
-    EditDialogComponent,
-    FilterPipe,
-    NotifierComponent,
-    AddEventDialogComponent,
-    DeleteEventDialogComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    RouterModule.forRoot(appRoutes),
-    BrowserAnimationsModule,
-    LayoutModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
-    FlexLayoutModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatBadgeModule,
-    MatDialogModule,
-    MatCardModule,
-    MatSnackBarModule
-  ],
-  providers: [{ provide: MAT_DIALOG_DATA, useValue: {} },
-     { provide: MatDialogRef, useValue: {} }],
-  bootstrap: [AppComponent],
-  entryComponents: [ConfirmDialogComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    declarations: [
+        AppComponent,
+        ContactsFormComponent,
+        ListComponent,
+        HomeComponent,
+        ContactsComponent,
+        PlayerComponent,
+        LocationComponent,
+        NotfoundComponent,
+        HeaderComponent,
+        SidenavListComponent,
+        ConfirmDialogComponent,
+        EditDialogComponent,
+        FilterPipe,
+        NotifierComponent,
+        AddEventDialogComponent,
+        DeleteEventDialogComponent,
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        RouterModule.forRoot(appRoutes),
+        BrowserAnimationsModule,
+        LayoutModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatListModule,
+        FlexLayoutModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatBadgeModule,
+        MatDialogModule,
+        MatCardModule,
+        MatSnackBarModule,
+    ],
+    providers: [
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: {} },
+    ],
+    bootstrap: [AppComponent],
+    entryComponents: [ConfirmDialogComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule { }
+export class AppModule {}

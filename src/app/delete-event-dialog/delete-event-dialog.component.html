@@ -1,43 +1,41 @@
 <mat-dialog-content>
-  <form [formGroup]="deleteEventForm" fxLayout="column">
-    <mat-form-field appearance="outline">
-      <mat-label>Enter event title</mat-label>
-      <input matInput formControlName="title" />
-      <mat-error *ngIf="deleteEventForm.controls['title'].invalid">{{
-        errorMessage
-      }}</mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Set start time</mat-label>
-      <input matInput formControlName="start" type="datetime-local" />
-      <mat-error *ngIf="deleteEventForm.controls['start'].invalid">
-        {{ errorMessage }}
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Set end time</mat-label>
-      <input matInput formControlName="end" type="datetime-local" />
-    </mat-form-field>
-  </form>
+    <form [formGroup]="deleteEventForm" fxLayout="column">
+        <mat-form-field appearance="outline">
+            <mat-label>Enter event title</mat-label>
+            <input matInput formControlName="title" />
+            <mat-error *ngIf="deleteEventForm.controls['title'].invalid">{{
+                errorMessage
+            }}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Set start time</mat-label>
+            <input matInput formControlName="start" type="datetime-local" />
+            <mat-error *ngIf="deleteEventForm.controls['start'].invalid">
+                {{ errorMessage }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Set end time</mat-label>
+            <input matInput formControlName="end" type="datetime-local" />
+        </mat-form-field>
+    </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button
-    mat-raised-button
-    color="primary"
-    type="submit"
-    [disabled]="deleteEventForm.invalid"
-    [mat-dialog-close]="true"
-    (click)="updateEvent()"
-  >
-    Update event
-  </button>
-  <button
-    mat-raised-button
-    color="warn"
-    type="submit"
-    (click)="deleteEvent()"
-    [mat-dialog-close]="true"
-  >
-    Delete event
-  </button>
+    <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="deleteEventForm.invalid"
+        [mat-dialog-close]="true"
+        (click)="updateEvent()">
+        Update event
+    </button>
+    <button
+        mat-raised-button
+        color="warn"
+        type="submit"
+        (click)="deleteEvent()"
+        [mat-dialog-close]="true">
+        Delete event
+    </button>
 </mat-dialog-actions>
