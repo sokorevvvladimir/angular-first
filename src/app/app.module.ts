@@ -12,7 +12,7 @@ import {
 } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import { AppComponent } from './app.component';
 import { ContactsFormComponent } from './contacts-form/contacts-form.component';
 import { ListComponent } from './list/list.component';
@@ -38,6 +38,8 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { NotifierComponent } from './notifier/notifier.component';
 import { AddEventDialogComponent } from './add-event-dialog/add-event-dialog.component';
 import { DeleteEventDialogComponent } from './delete-event-dialog/delete-event-dialog.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 const appRoutes: Routes = [
     { path: '', component: HomeComponent },
@@ -85,6 +87,9 @@ const appRoutes: Routes = [
         MatDialogModule,
         MatCardModule,
         MatSnackBarModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        NgxMaterialTimepickerModule
     ],
     providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },

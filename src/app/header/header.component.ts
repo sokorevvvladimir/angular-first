@@ -1,7 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { TotalContactsService } from '../total-contacts.service';
+import { ContactsStoreService } from '../contacts-store.service';
 
 @Component({
   selector: 'app-header',
@@ -9,12 +8,12 @@ import { TotalContactsService } from '../total-contacts.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  public totalContacts$: Observable<number> = this.totalContactsService.totalContacts$;
+  public totalContacts$: Observable<number> = this.contactsStoreService.totalContacts$;
 
   @Output()
   public sidenavToggle = new EventEmitter();
 
-  constructor(private readonly totalContactsService: TotalContactsService) { }
+  constructor(private readonly contactsStoreService: ContactsStoreService) { }
   
  public onToggleSidenav = () => {
    this.sidenavToggle.emit();

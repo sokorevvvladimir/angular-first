@@ -1,8 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Contact } from '../contact';
-import { StoreService } from '../store.service';
+import { ErrorGenerateService } from '../error-generate.service';
+import { ContactsStoreService } from '../contacts-store.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-edit-dialog',
@@ -11,12 +13,19 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class EditDialogComponent implements OnInit {
     public editContactForm: FormGroup;
+    public nameErrorMessage$: Observable<string> =
+        this.errorGenerateService.nameErrorMessage$;
+    public emailErrorMessage$: Observable<string> =
+        this.errorGenerateService.emailErrorMessage$;
+    public phoneErrorMessage$: Observable<string> =
+        this.errorGenerateService.phoneErrorMessage$;
 
     constructor(
         public dialogRef: MatDialogRef<EditDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public currentContact: Contact,
-        private readonly storeService: StoreService,
+        private readonly contactsStoreService: ContactsStoreService,
         private readonly fb: FormBuilder,
+        public readonly errorGenerateService: ErrorGenerateService,
     ) {}
 
     ngOnInit(): void {
@@ -44,59 +53,9 @@ export class EditDialogComponent implements OnInit {
         });
     }
 
-    public getErrorMessage = (name: string) => {
-        switch (name) {
-            case 'name':
-                if (
-                    this.editContactForm.controls['name'].hasError('required')
-                ) {
-                    return 'You must enter a value';
-                } else if (
-                    this.editContactForm.controls['name'].hasError('pattern')
-                ) {
-                    return 'A name must contain only letters, numbers and spaces';
-                } else if (
-                    this.editContactForm.controls['name'].hasError('minlength')
-                ) {
-                    return 'Required length is at least 3 characters';
-                } else {
-                    return '';
-                }
-
-            case 'email':
-                if (
-                    this.editContactForm.controls['email'].hasError('required')
-                ) {
-                    return 'You must enter a value';
-                } else if (
-                    this.editContactForm.controls['email'].hasError('email')
-                ) {
-                    return "An email must contain '@' sign";
-                } else {
-                    return '';
-                }
-
-            case 'phone':
-                if (
-                    this.editContactForm.controls['phone'].hasError('required')
-                ) {
-                    return 'You must enter a value';
-                } else if (
-                    this.editContactForm.controls['phone'].hasError('pattern')
-                ) {
-                    return 'A phone number must consist of only numbers';
-                } else {
-                    return '';
-                }
-
-            default:
-                return;
-        }
-    };
-
     public updateContact() {
         const { name, email, phone } = this.editContactForm.value;
         const id = this.currentContact.id;
-        this.storeService.updateContact({ id, name, email, phone });
+        this.contactsStoreService.updateContact({ id, name, email, phone });
     }
 }

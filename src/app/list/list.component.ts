@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Contact } from '../contact';
 import { Observable } from 'rxjs';
-import { StoreService } from '../store.service';
+import { ContactsStoreService } from '../contacts-store.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 
@@ -12,10 +12,10 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 })
 export class ListComponent {
     public filterValue = '';
-    public contacts$: Observable<Contact[]> = this.storeService.contacts$;
+    public contacts$: Observable<Contact[]> = this.contactsStoreService.contacts$;
 
     constructor(
-        private readonly storeService: StoreService,
+        private readonly contactsStoreService: ContactsStoreService,
         public dialog: MatDialog,
     ) {}
 
@@ -24,7 +24,7 @@ export class ListComponent {
     }
 
     public onDelete(id: string): void {
-        this.storeService.deleteContact(id);
+        this.contactsStoreService.deleteContact(id);
         this.clearFilter();
     }
 

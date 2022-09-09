@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { StoreService } from '../store.service';
+import { Observable } from 'rxjs';
+import { ContactsStoreService } from '../contacts-store.service';
+import { ErrorGenerateService } from '../error-generate.service';
 
 @Component({
     selector: 'app-contacts-form',
@@ -9,10 +11,14 @@ import { StoreService } from '../store.service';
 })
 export class ContactsFormComponent implements OnInit {
     public contactsForm: FormGroup;
+    public nameErrorMessage$: Observable<string> = this.errorGenerateService.nameErrorMessage$;
+    public emailErrorMessage$: Observable<string> = this.errorGenerateService.emailErrorMessage$;
+    public phoneErrorMessage$: Observable<string> = this.errorGenerateService.phoneErrorMessage$;
 
     constructor(
         private readonly fb: FormBuilder,
-        private readonly storeService: StoreService,
+        private readonly contactsStoreService: ContactsStoreService,
+        public readonly errorGenerateService: ErrorGenerateService
     ) {}
 
     ngOnInit(): void {
@@ -34,52 +40,8 @@ export class ContactsFormComponent implements OnInit {
         });
     }
 
-    public getErrorMessage = (name: string) => {
-        switch (name) {
-            case 'name':
-                if (this.contactsForm.controls['name'].hasError('required')) {
-                    return 'You must enter a value';
-                } else if (
-                    this.contactsForm.controls['name'].hasError('pattern')
-                ) {
-                    return 'A name must contain only letters, numbers and spaces';
-                } else if (
-                    this.contactsForm.controls['name'].hasError('minlength')
-                ) {
-                    return 'Required length is at least 3 characters';
-                } else {
-                    return '';
-                }
-
-            case 'email':
-                if (this.contactsForm.controls['email'].hasError('required')) {
-                    return 'You must enter a value';
-                } else if (
-                    this.contactsForm.controls['email'].hasError('email')
-                ) {
-                    return "An email must contain '@' sign";
-                } else {
-                    return '';
-                }
-
-            case 'phone':
-                if (this.contactsForm.controls['phone'].hasError('required')) {
-                    return 'You must enter a value';
-                } else if (
-                    this.contactsForm.controls['phone'].hasError('pattern')
-                ) {
-                    return 'A phone number must consist of only numbers';
-                } else {
-                    return '';
-                }
-
-            default:
-                return;
-        }
-    };
-
     public addContact() {
-        this.storeService.setContact(this.contactsForm.value);
+        this.contactsStoreService.setContact(this.contactsForm.value);
         this.contactsForm.reset();
     }
 }

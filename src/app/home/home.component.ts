@@ -17,7 +17,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEventDialogComponent } from '../add-event-dialog/add-event-dialog.component';
 import { DeleteEventDialogComponent } from '../delete-event-dialog/delete-event-dialog.component';
-import { StoreService } from '../store.service';
+import { CalendarStoreService } from '../calendar-store.service';
 import { v4 as uuidv4 } from 'uuid';
 import { MyEvent } from '../event';
 import { Subscription } from 'rxjs';
@@ -65,12 +65,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(
         public dialog: MatDialog,
-        private readonly storeService: StoreService,
+        private readonly calendarStoreService: CalendarStoreService,
     ) {}
 
     ngOnInit(): void {
         this.passEventsToCalendar();
-        this.storeService.getMyEvents();
+        this.calendarStoreService.getMyEvents();
     }
 
     ngAfterViewInit() {
@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private passEventsToCalendar(): void {
-        this.myEventsSubscription = this.storeService.myEvents$.subscribe(
+        this.myEventsSubscription = this.calendarStoreService.myEvents$.subscribe(
             myEvents => {
                 this.myEvents = myEvents;
                 this.calendarOptions = {
@@ -131,7 +131,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private handleExternalEventReceiveDrop(info: any): void {
-        this.storeService.setMyExternalEvent(info.event);
+        this.calendarStoreService.setMyExternalEvent(info.event);
     }
 
     private handleDateClick(info: any): void {
@@ -161,7 +161,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         const localISOEnd = new Date(eventDropInfo.event._instance?.range.end)
             .toISOString()
             .substring(0, 16);
-        this.storeService.updateEvent(
+        this.calendarStoreService.updateEvent(
             eventDropInfo,
             localISOStart.toString(),
             localISOEnd.toString(),
@@ -177,7 +177,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         const localISOEnd = new Date(eventResizeInfo.event._instance?.range.end)
             .toISOString()
             .substring(0, 16);
-        this.storeService.updateEvent(
+        this.calendarStoreService.updateEvent(
             eventResizeInfo,
             localISOStart.toString(),
             localISOEnd.toString(),
@@ -185,18 +185,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private onOpenAddEventDialog(info: any): void {
-        let calendarApi = this.calendarRef.nativeElement.getApi();
+       
         if (screen.width < 500) {
             this.dialog.open(AddEventDialogComponent, {
                 width: '100%',
                 height: '60%',
-                data: { info, calendarApi },
+                data: info
             });
         } else {
             this.dialog.open(AddEventDialogComponent, {
                 width: '50%',
                 height: '60%',
-                data: { info, calendarApi },
+                data: info
             });
         }
     }

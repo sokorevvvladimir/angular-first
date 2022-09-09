@@ -2,9 +2,24 @@
     <form [formGroup]="editContactForm" fxLayout="column">
         <mat-form-field appearance="fill">
             <mat-label>Enter a name</mat-label>
-            <input matInput placeholder="Name" formControlName="name" />
+            <input
+                matInput
+                placeholder="Name"
+                formControlName="name"
+                (blur)="
+                    errorGenerateService.setOnBlurErrorMessage(
+                        'name',
+                        editContactForm.controls['name']
+                    )
+                "
+                (input)="
+                    errorGenerateService.setErrorMessage(
+                        'name',
+                        editContactForm.controls['name'].errors
+                    )
+                " />
             <mat-error *ngIf="editContactForm.controls['name'].invalid">{{
-                getErrorMessage('name')
+                nameErrorMessage$ | async
             }}</mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
@@ -12,16 +27,31 @@
             <input
                 matInput
                 placeholder="mail@example.com"
-                formControlName="email" />
+                formControlName="email"
+                (input)="
+                    errorGenerateService.setErrorMessage(
+                        'email',
+                        editContactForm.controls['email'].errors
+                    )
+                " />
             <mat-error *ngIf="editContactForm.controls['email'].invalid">{{
-                getErrorMessage('email')
+                emailErrorMessage$ | async
             }}</mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label>Enter a phone number</mat-label>
-            <input matInput placeholder="123456789" formControlName="phone" />
+            <input
+                matInput
+                placeholder="123456789"
+                formControlName="phone"
+                (input)="
+                    errorGenerateService.setErrorMessage(
+                        'phone',
+                        editContactForm.controls['phone'].errors
+                    )
+                " />
             <mat-error *ngIf="editContactForm.controls['phone'].invalid">{{
-                getErrorMessage('phone')
+                phoneErrorMessage$ | async
             }}</mat-error>
         </mat-form-field>
     </form>

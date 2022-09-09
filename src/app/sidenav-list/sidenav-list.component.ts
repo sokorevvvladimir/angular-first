@@ -6,8 +6,7 @@ import {
     OnDestroy,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-
-import { TotalContactsService } from '../total-contacts.service';
+import { ContactsStoreService } from '../contacts-store.service';
 
 @Component({
     selector: 'app-sidenav-list',
@@ -20,12 +19,12 @@ export class SidenavListComponent implements OnInit, OnDestroy {
 
     @Output()
     public sidenavClose = new EventEmitter();
-    constructor(private readonly totalContactsService: TotalContactsService) {}
+    constructor(private readonly contsctsStoreService: ContactsStoreService) {}
     public onSidenavClose = () => {
         this.sidenavClose.emit();
     };
     ngOnInit(): void {
-        this.totalContactsService.totalContacts$.subscribe(
+        this.subs = this.contsctsStoreService.totalContacts$.subscribe(
             totalContacts => (this.totalContacts = totalContacts),
         );
     }

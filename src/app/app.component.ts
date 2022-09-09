@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StoreService } from './store.service';
+import { ContactsStoreService } from './contacts-store.service';
 
 @Component({
     selector: 'app-root',
@@ -9,8 +9,8 @@ import { StoreService } from './store.service';
 export class AppComponent implements OnInit {
     public title = 'angular-phonebook-02';
 
-    constructor(private readonly storeService: StoreService) {}
+    constructor(private readonly contactsStoreService: ContactsStoreService) {}
     ngOnInit() {
-        this.storeService.getContacts();
+        this.contactsStoreService.getContacts();
     }
 }

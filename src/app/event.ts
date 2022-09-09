@@ -1,5 +1,5 @@
 export interface MyEvent {
-    end?: string;
+    end: string;
     start: string;
     id: string;
     title: string;
