@@ -1,0 +1,100 @@
+.container {
+    padding: 0 20px;
+    position: relative;
+}
+
+.calendar-container {
+    width: 100%;
+}
+
+@media screen and (min-width: 685px) {
+    .calendar-container {
+        width: 75%;
+    }
+}
+
+@media screen and (min-width: 770px) {
+    .calendar-container {
+        width: 80%;
+    }
+}
+
+@media screen and (min-width: 1020px) {
+    .calendar-container {
+        width: 85%;
+    }
+}
+
+.toggleWeeknd {
+    align-self: flex-end;
+    width: 146px;
+    margin-bottom: 10px;
+}
+
+.header {
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.external-events {
+    position: relative;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+
+    border-radius: 3px;
+    background-color: #efefef;
+    padding: 10px;
+    border: 1px solid #c9c9c9;
+    width: 95%;
+    display: block;
+}
+
+@media screen and (min-width: 685px) {
+    .external-events {
+        position: fixed;
+        top: 40%;
+        left: 75%;
+        z-index: 5;
+        width: 131px;
+    }
+}
+
+@media screen and (min-width: 770px) {
+    .external-events {
+        left: 80%;
+    }
+}
+
+@media screen and (min-width: 1020px) {
+    .external-events {
+        left: 85%;
+    }
+}
+
+.external-events-list {
+    list-style: none;
+    padding-inline-start: 0;
+}
+
+.external-event-item {
+    cursor: move;
+}
+
+.external-event-item:not(:last-child) {
+    margin-bottom: 2px;
+}
+
+.checkbox-p {
+    margin: 0;
+}
+
+.business-event {
+    background-color: #257e4a;
+    border-color: #257e4a;
+}
+
+.asterisk {
+    color: #257e4a;
+    font-weight: 700;
+}

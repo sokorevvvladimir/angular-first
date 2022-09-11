@@ -1,0 +1,59 @@
+<div class="container">
+    <h1 class="header">Organizer</h1>
+
+    <button
+        class="toggleWeeknd"
+        mat-flat-button
+        color="warn"
+        (click)="toggleWeekends()">
+        Toggle weekends
+    </button>
+
+    <div class="calendar-container">
+        <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+    </div>
+    <div #containerRef class="external-events">
+        <p>
+            <strong>Draggable Events</strong>
+        </p>
+        <ul class="external-events-list">
+            <li class="external-event-item">
+                <div
+                    class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event">
+                    <div class="fc-event-main">Holidays</div>
+                </div>
+            </li>
+            <li class="external-event-item">
+                <div
+                    class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event">
+                    <div class="fc-event-main">My day off</div>
+                </div>
+            </li>
+            <li class="external-event-item">
+                <div
+                    class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event">
+                    <div class="fc-event-main">Vacations</div>
+                </div>
+            </li>
+            <li class="external-event-item">
+                <div
+                    class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event business-event">
+                    <div class="fc-event-main">Business lunch*</div>
+                </div>
+            </li>
+            <li class="external-event-item">
+                <div
+                    class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event business-event">
+                    <div class="fc-event-main">Business meeting*</div>
+                </div>
+            </li>
+        </ul>
+        <p class="asterisk">
+            *Green events are only applicable on Week/Day scale
+        </p>
+        <p class="checkbox-p">
+            <input #checkboxDropRemoveRef type="checkbox" id="drop-remove" />
+            <label for="drop-remove">remove after drop</label>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+.headers {
+    text-transform: uppercase;
+}
+
+.contacts-form {
+    margin-bottom: 40px;
+}
+
+.container {
+    width: 85%;
+    margin: 0 auto;
+}
+
+@media (min-width: 600px) {
+    .container {
+        width: 60%;
+        margin: 0 auto;
+    }
+}

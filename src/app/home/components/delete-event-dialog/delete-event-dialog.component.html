@@ -1,0 +1,102 @@
+<mat-dialog-content>
+    <h2 class="header">Update / Delete event</h2>
+    <form [formGroup]="deleteEventForm" fxLayout="column">
+        <mat-form-field appearance="outline">
+            <mat-label>Enter event title</mat-label>
+            <input
+                matInput
+                formControlName="title"
+                (input)="
+                    errorGenerateService.setErrorMessage(
+                        'title',
+                        deleteEventForm.controls['title'].errors
+                    )
+                " />
+            <mat-error *ngIf="deleteEventForm.controls['title'].invalid">{{
+                titleErrorMessage$ | async
+            }}</mat-error>
+        </mat-form-field>
+        <div class="styling">
+            <mat-form-field appearance="outline" class="dateTime">
+                <mat-label>Set start date</mat-label>
+                <input
+                    matInput
+                    formControlName="startDate"
+                    [matDatepicker]="picker"
+                    [min]="minDate"
+                    readonly />
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="dateTime">
+                <mat-label>Set start time</mat-label>
+                <input
+                    matInput
+                    formControlName="startTime"
+                    [ngxTimepicker]="toggleTimepicker"
+                    [disableClick]="true"
+                    aria-label="24hr format"
+                    [format]="24"
+                    readonly />
+                <ngx-material-timepicker-toggle
+                    matSuffix
+                    [for]="toggleTimepicker"></ngx-material-timepicker-toggle>
+                <ngx-material-timepicker
+                    #toggleTimepicker></ngx-material-timepicker>
+            </mat-form-field>
+        </div>
+        <div class="styling">
+            <mat-form-field appearance="outline" class="dateTime">
+                <mat-label>Set end date</mat-label>
+                <input
+                    matInput
+                    formControlName="endDate"
+                    [min]="minDate"
+                    [matDatepicker]="picker1" />
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #picker1></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="dateTime">
+                <mat-label>Set end time</mat-label>
+                <input
+                    matInput
+                    formControlName="endTime"
+                    [ngxTimepicker]="toggleTimepicker1"
+                    [disableClick]="true"
+                    aria-label="24hr format"
+                    [format]="24"
+                    readonly />
+                <ngx-material-timepicker-toggle
+                    matSuffix
+                    [for]="toggleTimepicker1"></ngx-material-timepicker-toggle>
+                <ngx-material-timepicker
+                    #toggleTimepicker1></ngx-material-timepicker>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="deleteEventForm.invalid"
+        [mat-dialog-close]="true"
+        (click)="updateEvent()">
+        Update event
+    </button>
+    <button
+        mat-raised-button
+        color="warn"
+        type="submit"
+        (click)="deleteEvent()"
+        [mat-dialog-close]="true">
+        Delete event
+    </button>
+</mat-dialog-actions>
