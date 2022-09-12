@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ContactsStoreService } from '../../../services/contacts-store.service';
 import { ErrorGenerateService } from '../../../services/error-generate.service';
 
@@ -9,20 +9,30 @@ import { ErrorGenerateService } from '../../../services/error-generate.service';
     templateUrl: './contacts-form.component.html',
     styleUrls: ['./contacts-form.component.css'],
 })
-export class ContactsFormComponent implements OnInit {
+export class ContactsFormComponent implements OnInit, OnDestroy {
+    private myContactsSubscription: Subscription;
     public contactsForm: FormGroup;
-    public nameErrorMessage$: Observable<string> = this.errorGenerateService.nameErrorMessage$;
-    public emailErrorMessage$: Observable<string> = this.errorGenerateService.emailErrorMessage$;
-    public phoneErrorMessage$: Observable<string> = this.errorGenerateService.phoneErrorMessage$;
+    public nameErrorMessage$: Observable<string> =
+        this.errorGenerateService.nameErrorMessage$;
+    public emailErrorMessage$: Observable<string> =
+        this.errorGenerateService.emailErrorMessage$;
+    public phoneErrorMessage$: Observable<string> =
+        this.errorGenerateService.phoneErrorMessage$;
 
     constructor(
         private readonly fb: FormBuilder,
         private readonly contactsStoreService: ContactsStoreService,
-        public readonly errorGenerateService: ErrorGenerateService
+        public readonly errorGenerateService: ErrorGenerateService,
     ) {}
 
     ngOnInit(): void {
         this.initForm();
+    }
+
+    ngOnDestroy(): void {
+        if (this.myContactsSubscription) {
+            this.myContactsSubscription.unsubscribe();
+        }
     }
 
     private initForm(): void {
@@ -40,8 +50,12 @@ export class ContactsFormComponent implements OnInit {
         });
     }
 
-    public addContact() {
-        this.contactsStoreService.setContact(this.contactsForm.value);
-        this.contactsForm.reset();
+    public addContact(): void {
+        if (this.contactsStoreService.setContact(this.contactsForm.value)) {
+            this.myContactsSubscription = this.contactsStoreService
+                .setContact(this.contactsForm.value)!
+                .subscribe();
+            this.contactsForm.reset();
+        }
     }
 }

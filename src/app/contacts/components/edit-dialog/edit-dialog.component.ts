@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Contact } from '../../../models/contact';
 import { ErrorGenerateService } from '../../../services/error-generate.service';
 import { ContactsStoreService } from '../../../services/contacts-store.service';
@@ -11,7 +11,8 @@ import { ContactsStoreService } from '../../../services/contacts-store.service';
     templateUrl: './edit-dialog.component.html',
     styleUrls: ['./edit-dialog.component.css'],
 })
-export class EditDialogComponent implements OnInit {
+export class EditDialogComponent implements OnInit, OnDestroy {
+    private myContactSubscription: Subscription;
     public editContactForm: FormGroup;
     public nameErrorMessage$: Observable<string> =
         this.errorGenerateService.nameErrorMessage$;
@@ -30,6 +31,12 @@ export class EditDialogComponent implements OnInit {
 
     ngOnInit(): void {
         this.initForm();
+    }
+
+    ngOnDestroy(): void {
+        if (this.myContactSubscription) {
+            this.myContactSubscription.unsubscribe();
+        }
     }
 
     private initForm(): void {
@@ -56,6 +63,12 @@ export class EditDialogComponent implements OnInit {
     public updateContact() {
         const { name, email, phone } = this.editContactForm.value;
         const id = this.currentContact.id;
-        this.contactsStoreService.updateContact({ id, name, email, phone });
+        if (
+            this.contactsStoreService.updateContact({ id, name, email, phone })
+        ) {
+            this.contactsStoreService
+                .updateContact({ id, name, email, phone })
+                .subscribe();
+        }
     }
 }

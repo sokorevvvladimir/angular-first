@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Contact } from '../../../models/contact';
 import { ContactsStoreService } from '../../../services/contacts-store.service';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
@@ -10,22 +10,34 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.css'],
 })
-export class ListComponent {
+export class ListComponent implements OnDestroy {
+    private myContactsSubscription: Subscription;
     public filterValue = '';
-    public contacts$: Observable<Contact[]> = this.contactsStoreService.contacts$;
+    public contacts$: Observable<Contact[]> =
+        this.contactsStoreService.contacts$;
 
     constructor(
         private readonly contactsStoreService: ContactsStoreService,
         public dialog: MatDialog,
     ) {}
 
+    ngOnDestroy(): void {
+        if (this.myContactsSubscription) {
+            this.myContactsSubscription.unsubscribe();
+        }
+    }
+
     public clearFilter(): void {
         this.filterValue = '';
     }
 
     public onDelete(id: string): void {
-        this.contactsStoreService.deleteContact(id);
-        this.clearFilter();
+        if (this.contactsStoreService.deleteContact(id)) {
+            this.myContactsSubscription = this.contactsStoreService
+                .deleteContact(id)
+                .subscribe();
+            this.clearFilter();
+        }
     }
 
     public onEditOpenDialog = (item: Contact): void => {
